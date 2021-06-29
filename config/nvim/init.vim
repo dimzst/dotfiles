@@ -1,3 +1,8 @@
+set encoding=utf-8
+
+""""""""""""""""""""""""""""""
+"          PLUGIN            "
+""""""""""""""""""""""""""""""
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -18,10 +23,27 @@ Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
-set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-set list
+""""""""""""""""""""""""""""""
+"         END PLUGIN         "
+""""""""""""""""""""""""""""""
 
-" BEGIN THEME
+""""""""""""""""""""""""""""""
+"          GENERAL           "
+""""""""""""""""""""""""""""""
+set list listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+
+set incsearch ignorecase smartcase showmatch nohlsearch
+set noerrorbells novisualbell
+
+set noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
+set relativenumber nu
+
+set nobackup noswapfile nowritebackup 
+set undofile undodir=~/.vim/undodir
+
+set scrolloff=4
+
+" THEME
 syntax on
 set t_Co=256
 set cursorline
@@ -33,31 +55,36 @@ if exists('+termguicolors')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
-" END THEME
 
-" BEGIN COC config
-
-" TextEdit might fail if hidden is not set.
+" COC
 set hidden
-
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
 set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
 set updatetime=300
-
-" Don’t pass messages to |ins-completion-menu|.
 set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
 set signcolumn=yes
 
+" NETRW
+set splitbelow
+set splitright
+
+let g:go_highlight_function_calls=1
+let g:go_highlight_function_parameters=1
+let g:go_highlight_function_arguments=1
+
+""""""""""""""""""""""""""""""
+"         END GENERAL        "
+""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""""""""""
+"         BINDING            "
+""""""""""""""""""""""""""""""
+let mapleader=" "
+
+" CLIPBOARD
+noremap <Leader>cc "*y
+noremap <Leader>cv "*p
+
+" COC 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -95,13 +122,7 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
 
-" END COC config
-
-let g:go_def_mapping_enabled = 0
-let g:go_fmt_command="gopls"
-let g:go_gopls_gofumpt=1
-
-" BEGIN FZF
+" FZF
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
@@ -112,9 +133,7 @@ nnoremap <silent> <C-p> :FZF -m<cr>
 command! -bang -nargs=* PRg
   \ call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, fzf#vim#with_preview({'dir': expand('%:p:h')}), <bang>0)
 
-" END FZF
-
-" BEGIN Auto Close Bracket
+" AUTO CLOSE BRACKET
 inoremap " ""<left>
 inoremap ' ''<left>
 inoremap ` ``<left>
@@ -123,20 +142,18 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
-" END Auto Close Bracket
 
-" Use ctrl-[hjkl] to select the active split!
-" nmap <silent> <c-k> :wincmd k<CR>
-" nmap <silent> <c-j> :wincmd j<CR>
-" nmap <silent> <c-h> :wincmd h<CR>
-" nmap <silent> <c-l> :wincmd l<CR>
-
-" BEGIN Pane navigation
+" PANE NAVIGATION
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-set splitbelow
-set splitright
-" END Pane Navigation
+" let g:go_def_mapping_enabled = 0
+" let g:go_fmt_command="gopls"
+" let g:go_gopls_gofumpt=1
+
+
+""""""""""""""""""""""""""""""
+"       END BINDING          "
+""""""""""""""""""""""""""""""
