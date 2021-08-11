@@ -4,9 +4,6 @@ local on_attach = function(client, bufnr)
 	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
 	local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-	--Enable completion triggered by <c-x><c-o>
-	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
 	-- Mappings.
 	local opts = { noremap=true, silent=true }
 
@@ -16,25 +13,39 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
 	buf_set_keymap('n', 'gi', '<cmd>Telescope lsp_implementations<CR>', opts)
 	buf_set_keymap('n', '<C-k>', '<cmd>Lspsaga signature_help<CR>', opts)
-	buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-	buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-	buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+	-- buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+	-- buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+	-- buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 	buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-	buf_set_keymap('n', '<space>rn', '<cmd>Lspsaga rename<CR>', opts)
-	buf_set_keymap('n', '<space>ca', '<cmd>Lspsaga code_action<CR>', opts)
-	buf_set_keymap('n', 'gr', '<cmd>Telescop lsp_references<CR>', opts)
-	buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+	buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
+	buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
+	buf_set_keymap('n', 'gr', '<cmd>Telescope lsp_references<CR>', opts)
+	buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 	buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
 	buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-	buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-	buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+	buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+	buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
-	require 'completion'.on_attach(client, bufnr)
+	require "lsp_signature".on_attach()
 end
+
+require'lspconfig'.tsserver.setup{
+	on_attach = on_attach,
+}
 
 local go_on_attach = function(client, bufnr)
 	on_attach(client, bufnr)
-	vim.api.nvim_command("au BufWritePre *.go lua goimports({}, 1000)")
+	vim.cmd([[
+	augroup goplsgroup
+	autocmd!
+	autocmd BufWritePre *.go lua gofmtimports({}, 1000)
+	augroup END
+	]])
+
+	local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+	-- Mappings.
+	local opts = { noremap=true, silent=true }
+	buf_set_keymap("n", "<leader>oi", "<cmd>lua goimports({}, 1000)<CR>", opts)
 end
 
 require'lspconfig'.gopls.setup{
@@ -53,23 +64,19 @@ require'lspconfig'.gopls.setup{
 	}
 }
 
-require'lspconfig'.tsserver.setup{
-	on_attach = on_attach,
-}
+function gofmtimports(timeoutms)
+	vim.lsp.buf.formatting_sync(nil, timeout_ms)
+	goimports(timeout_ms)
+end
 
 function goimports(timeoutms)
-	local context = { source = { organizeImports = true } }
-	vim.validate { context = { context, "t", true } }
-
 	local params = vim.lsp.util.make_range_params()
-	params.context = context
-
-	vim.lsp.buf.formatting_sync(nil, timeout_ms)
+	params.context = { only = { "source.organizeImports" }}
 
 	-- See the implementation of the textDocument/codeAction callback
 	-- (lua/vim/lsp/handler.lua) for how to do this properly.
 	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
-	if not result or next(result) == nil then return end
+	if not result or next(result) == nil or result[1] == nil then return end
 	local actions = result[1].result
 	if not actions then return end
 	local action = actions[1]
@@ -88,3 +95,32 @@ function goimports(timeoutms)
 		vim.lsp.buf.execute_command(action)
 	end
 end
+
+function gonewfileattach(timeoutms)
+	local result = vim.lsp.get_active_clients()
+	-- can't find workaround to start lsp client when buf has not been saved
+	if not result or next(result) == nil then return end
+	-- use the first client
+	vim.lsp.buf_attach_client(0, result[1].id)
+end
+
+function gosaveattach(timeoutms)
+	local ready = vim.lsp.buf.server_ready()
+	if not ready then
+		local result = vim.lsp.get_active_clients()
+		if not result or next(result) == nil then
+			require'lspconfig'.gopls.autostart()
+		else
+			-- use the first client
+			vim.lsp.buf_attach_client(0, result[1].id)
+		end
+	end
+end
+
+vim.cmd([[
+augroup goplsattach
+autocmd!
+autocmd BufNewFile *.go lua gonewfileattach({}, 1000)
+autocmd BufWritePost *.go lua gosaveattach({}, 1000)
+augroup END
+]])

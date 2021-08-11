@@ -11,6 +11,9 @@ setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
 
+export LANG=en_US.UTF-8
+export LC_COLLATE=C
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -29,14 +32,20 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export DOOMDIR=~/.config/doom
+
 export GOPATH=$HOME/go
+export GOPRIVATE=gitlab.sicepat.tech
 
 export FD_OPTIONS="--follow --exclude .git --exclude node_modules --exclude vendor"
 export FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard | fd --type f $FD_OPTIONS"
 export FZF_CTRL_T_COMMAND="fd $FD_OPTIONS"
 export FZF_ALT_C_COMMAND="fd --type d $FD_OPTIONS"
 
-export PATH=$PATH:$GOPATH/bin:$HOME/Scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+export PATH=$PATH:$GOPATH/bin:$HOME/Scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin:$HOME/bin:$HOME/.emacs.d/bin
 bindkey "^U" backward-kill-line
 bindkey "^X\x7f" backward-kill-line
 bindkey "^X^_" redo
@@ -48,6 +57,11 @@ bindkey "^X^_" redo
 eval "$(zoxide init zsh)"
 
 alias gf="git fuzzy"
+alias ls="exa"
+alias ll="exa -l"
+alias cheat="cht.sh"
+alias t="todo.sh"
 
 # export LANG=en_US.UTF-8
 fpath=(~/.zsh.d/ $fpath)
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

@@ -1,5 +1,10 @@
 # set -g default-terminal "xterm-256color" # colors!
-set -ag terminal-overrides ",xterm-256color:RGB"
+set -g default-terminal "screen-256color" # colors!
+
+set-option -g repeat-time 200
+
+# set -ag terminal-overrides ",xterm-256color:RGB"
+# set -ag terminal-overrides "xterm-kitty"
 
 # : << EOF
 # https://github.com/gpakosz/.tmux
@@ -38,34 +43,71 @@ tmux_conf_new_pane_reconnect_ssh=false
 # prompt for session name when creating a new session, possible values are:
 #   - true
 #   - false (default)
-tmux_conf_new_session_prompt=false
-
+tmux_conf_new_session_prompt=true
 
 # -- display -------------------------------------------------------------------
 
 # RGB 24-bit colour support (tmux >= 2.2), possible values are:
 #  - true
 #  - false (default)
-tmux_conf_24b_colour=false
+tmux_conf_24b_colour=true
 
 # default theme
-tmux_conf_theme_colour_1="#080808"    # dark gray
-tmux_conf_theme_colour_2="#303030"    # gray
-tmux_conf_theme_colour_3="#8a8a8a"    # light gray
-tmux_conf_theme_colour_4="#00afff"    # light blue
-tmux_conf_theme_colour_5="#ffff00"    # yellow
-tmux_conf_theme_colour_6="#080808"    # dark gray
-tmux_conf_theme_colour_7="#e4e4e4"    # white
-tmux_conf_theme_colour_8="#080808"    # dark gray
-tmux_conf_theme_colour_9="#ffff00"    # yellow
-tmux_conf_theme_colour_10="#ff00af"   # pink
-tmux_conf_theme_colour_11="#5fff00"   # green
-tmux_conf_theme_colour_12="#8a8a8a"   # light gray
-tmux_conf_theme_colour_13="#e4e4e4"   # white
-tmux_conf_theme_colour_14="#080808"   # dark gray
-tmux_conf_theme_colour_15="#080808"   # dark gray
-tmux_conf_theme_colour_16="#d70000"   # red
-tmux_conf_theme_colour_17="#e4e4e4"   # white
+# tmux_conf_theme_colour_1="#080808"    # dark gray
+# tmux_conf_theme_colour_2="#303030"    # gray
+# tmux_conf_theme_colour_3="#8a8a8a"    # light gray
+# tmux_conf_theme_colour_4="#00afff"    # light blue
+# tmux_conf_theme_colour_5="#ffff00"    # yellow
+# tmux_conf_theme_colour_6="#080808"    # dark gray
+# tmux_conf_theme_colour_7="#e4e4e4"    # white
+# tmux_conf_theme_colour_8="#080808"    # dark gray
+# tmux_conf_theme_colour_9="#ffff00"    # yellow
+# tmux_conf_theme_colour_10="#ff00af"   # pink
+# tmux_conf_theme_colour_11="#5fff00"   # green
+# tmux_conf_theme_colour_12="#8a8a8a"   # light gray
+# tmux_conf_theme_colour_13="#e4e4e4"   # white
+# tmux_conf_theme_colour_14="#080808"   # dark gray
+# tmux_conf_theme_colour_15="#080808"   # dark gray
+# tmux_conf_theme_colour_16="#d70000"   # red
+# tmux_conf_theme_colour_17="#e4e4e4"   # white
+
+# one half dark
+# tmux_conf_theme_colour_1="#313640"    # dark gray
+# tmux_conf_theme_colour_2="#303030"    # gray
+# tmux_conf_theme_colour_3="#5d677a"    # light gray
+# tmux_conf_theme_colour_4="#61afef"    # light blue
+# tmux_conf_theme_colour_5="#e5c07b"    # yellow
+# tmux_conf_theme_colour_6="#313640"    # dark gray
+# tmux_conf_theme_colour_7="#dcdfe4"    # white
+# tmux_conf_theme_colour_8="#313640"    # dark gray
+# tmux_conf_theme_colour_9="#e5c07b"    # yellow
+# tmux_conf_theme_colour_10="#c678dd"   # pink
+# tmux_conf_theme_colour_11="#98c379"   # green
+# tmux_conf_theme_colour_12="#5d677a"   # light gray
+# tmux_conf_theme_colour_13="#dcdfe4"   # white
+# tmux_conf_theme_colour_14="#313640"   # dark gray
+# tmux_conf_theme_colour_15="#313640"   # dark gray
+# tmux_conf_theme_colour_16="#e06c75"   # red
+# tmux_conf_theme_colour_17="#dcdfe4"   # white
+
+# edge aura
+tmux_conf_theme_colour_1="#363a49"    # dark gray
+tmux_conf_theme_colour_2="#7a819d"    # gray
+tmux_conf_theme_colour_3="#c5cdd9"    # light gray
+tmux_conf_theme_colour_4="#6cb6eb"    # light blue
+tmux_conf_theme_colour_5="#deb974"    # yellow
+tmux_conf_theme_colour_6="#363a49"    # dark gray
+tmux_conf_theme_colour_7="#dcdfe4"    # white
+tmux_conf_theme_colour_8="#7e8294"    # dark gray
+tmux_conf_theme_colour_9="#deb974"    # yellow
+tmux_conf_theme_colour_10="#3a8b84"   # cyan
+tmux_conf_theme_colour_11="#a0c980"   # green
+tmux_conf_theme_colour_12="#c5cdd9"   # light gray
+tmux_conf_theme_colour_13="#202023"   # black
+tmux_conf_theme_colour_14="#363a49"   # dark gray
+tmux_conf_theme_colour_15="#363a49"   # dark gray
+tmux_conf_theme_colour_16="#ec7279"   # red
+tmux_conf_theme_colour_17="#c5cdd9"   # white
 
 # default theme (ansi)
 #tmux_conf_theme_colour_1="colour0"
@@ -187,14 +229,20 @@ tmux_conf_theme_window_status_last_bg="$tmux_conf_theme_colour_2"
 tmux_conf_theme_window_status_last_attr="none"
 
 # status left/right sections separators
-tmux_conf_theme_left_separator_main=""
-tmux_conf_theme_left_separator_sub="|"
-tmux_conf_theme_right_separator_main=""
-tmux_conf_theme_right_separator_sub="|"
-#tmux_conf_theme_left_separator_main="\uE0B0"  # /!\ you don't need to install Powerline
-#tmux_conf_theme_left_separator_sub="\uE0B1"   #   you only need fonts patched with
-#tmux_conf_theme_right_separator_main="\uE0B2" #   Powerline symbols or the standalone
-#tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see README.md
+# tmux_conf_theme_left_separator_main=""
+# tmux_conf_theme_left_separator_sub="|"
+# tmux_conf_theme_right_separator_main=""
+# tmux_conf_theme_right_separator_sub="|"
+
+tmux_conf_theme_left_separator_main="\uE0BC "  # /!\ you don't need to install Powerline
+tmux_conf_theme_left_separator_sub="\uE0BD "   #   you only need fonts patched with
+tmux_conf_theme_right_separator_main="\uE0BE " #   Powerline symbols or the standalone
+tmux_conf_theme_right_separator_sub="\uE0BF "  #   PowerlineSymbols.otf font, see README.md
+
+# tmux_conf_theme_left_separator_main="\uE0B0"  # /!\ you don't need to install Powerline
+# tmux_conf_theme_left_separator_sub="\uE0B1"   #   you only need fonts patched with
+# tmux_conf_theme_right_separator_main="\uE0B2" #   Powerline symbols or the standalone
+# tmux_conf_theme_right_separator_sub="\uE0B3"  #   PowerlineSymbols.otf font, see README.md
 
 # status left/right content:
 #   - separate main sections with "|"
@@ -222,8 +270,9 @@ tmux_conf_theme_right_separator_sub="|"
 #     - #{username_ssh}
 #tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
 #tmux_conf_theme_status_right=" #{prefix}#{pairing}#{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %R , %d %b | #{username}#{root} | #{hostname} "
-tmux_conf_theme_status_left=""
-tmux_conf_theme_status_right=" #{circled_session_name}#{synchronized} , | #{username}#{root} | #{hostname} "
+tmux_conf_theme_status_left="   #S | %d %b , %R "
+tmux_conf_theme_status_right=" #{synchronized} #(battstat tmux) | #{username}#{root} | #{hostname} "
+# tmux_conf_theme_status_right=" #{circled_session_name}#{synchronized} ,#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} | #{username}#{root} | #{hostname} "
 
 # status left style
 tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_6,$tmux_conf_theme_colour_7,$tmux_conf_theme_colour_8"
@@ -270,8 +319,46 @@ tmux_conf_battery_bar_symbol_empty="◻"
 #   - a number, e.g. 5
 tmux_conf_battery_bar_length="auto"
 
+# battery bar symbols
+tmux_conf_battery_bar_symbol_full="ﱢ"
+tmux_conf_battery_bar_symbol_empty="ﱡ"
+# tmux_conf_battery_bar_symbol_full="◼"
+# tmux_conf_battery_bar_symbol_empty="◻"
+# tmux_conf_battery_bar_symbol_full="♥"
+# tmux_conf_battery_bar_symbol_empty="·"
+
+# battery bar length (in number of symbols), possible values are:
+#   - auto
+#   - a number, e.g. 5
+tmux_conf_battery_bar_length="auto"
+
 # battery bar palette, possible values are:
-#   - gradient (default) - heat - "colour_full_fg,colour_empty_fg,colour_bg" tmux_conf_battery_bar_palette="gradient" #tmux_conf_battery_bar_palette="#d70000,#e4e4e4,#000000"   # red, white, black battery hbar palette, possible values are: - gradient (default) - heat - "colour_low,colour_half,colour_full" tmux_conf_battery_hbar_palette="gradient" #tmux_conf_battery_hbar_palette="#d70000,#ff5f00,#5fff00"  # red, orange, green battery vbar palette, possible values are: - gradient (default) - heat - "colour_low,colour_half,colour_full" tmux_conf_battery_vbar_palette="gradient" #tmux_conf_battery_vbar_palette="#d70000,#ff5f00,#5fff00"  # red, orange, green symbols used to indicate whether battery is charging or discharging tmux_conf_battery_status_charging="↑"       # U+2191 tmux_conf_battery_status_discharging="↓"    # U+2193 #tmux_conf_battery_status_charging="🔌"     # U+1F50C #tmux_conf_battery_status_discharging="🔋"  # U+1F50B clock style (when you hit <prefix> + t) you may want to use %I:%M %p in place of %R in tmux_conf_theme_status_right
+#   - gradient (default)
+#   - heat
+#   - "colour_full_fg,colour_empty_fg,colour_bg"
+tmux_conf_battery_bar_palette="gradient"
+#tmux_conf_battery_bar_palette="#d70000,#e4e4e4,#000000"   # red, white, black
+
+# battery hbar palette, possible values are:
+#   - gradient (default)
+#   - heat
+#   - "colour_low,colour_half,colour_full"
+tmux_conf_battery_hbar_palette="gradient"
+#tmux_conf_battery_hbar_palette="#d70000,#ff5f00,#5fff00"  # red, orange, green
+
+# battery vbar palette, possible values are:
+#   - gradient (default)
+#   - heat
+#   - "colour_low,colour_half,colour_full"
+tmux_conf_battery_vbar_palette="gradient"
+#tmux_conf_battery_vbar_palette="#d70000,#ff5f00,#5fff00"  # red, orange, green
+
+# symbols used to indicate whether battery is charging or discharging
+# tmux_conf_battery_status_charging="↑"       # U+2191
+# tmux_conf_battery_status_discharging="↓"    # U+2193
+tmux_conf_battery_status_charging=""     # U+1F50C
+tmux_conf_battery_status_discharging=""  # U+1F50B
+
 tmux_conf_theme_clock_colour="$tmux_conf_theme_colour_4"
 tmux_conf_theme_clock_style="24"
 
@@ -314,6 +401,22 @@ set -g mouse on
 bind _ split-window -v
 # horizontal pane
 bind | split-window -h
+
+# bind p send-keys Enter
+# bind p run-shell -b 'zsh -c "tmux ls -F \#\{session_name\} | fzf-tmux -p -w 62% -h 38% -m | xargs -I {} tmux switch -t {}"'
+
+# add exit 0 to prevent tmux output to current pane when cancelling action
+
+bind p run-shell -b 'fzt attach | exit 0'
+bind t run-shell -b 'fzt kill | exit 0'
+
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+bind C-l send-keys 'C-l'
 
 # -- custom variables ----------------------------------------------------------
 # to define a custom #{foo} variable, define a POSIX shell function between the
