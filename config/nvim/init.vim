@@ -45,7 +45,7 @@ lua require('dimzst')
 
 " SETTINGS "{{{
 " ---------------------------------------------------------------------
-set list listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+set list listchars=eol:¬,tab:>-,trail:~,extends:>,precedes:<,lead:.
 
 set incsearch ignorecase smartcase showmatch nohlsearch
 set noerrorbells novisualbell
@@ -54,9 +54,9 @@ set mouse=a
 set noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 set relativenumber nu
 set scrolloff=4
-set colorcolumn=80
+set colorcolumn=80,100
 
-set nobackup noswapfile nowritebackup 
+set nobackup noswapfile nowritebackup
 set undofile undodir=~/.vim/undodir
 
 set splitbelow
