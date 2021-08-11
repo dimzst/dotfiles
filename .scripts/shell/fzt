@@ -1,0 +1,45 @@
+#!/bin/sh
+
+set -eo pipefail
+
+FZF_OPT="-p -w 72% -h 90% -m --height 30% --preview-window left:92% --layout reverse"
+FZF_PREVIEW="--preview='tmux capture-pane -ep -t {}'"
+TMUX_LS_FORMAT="-F #{session_name}"
+
+die() {
+    echo $1; exit 1;
+}
+
+session_command() {
+    if [ -z "$1" ]; then
+        die "session command required"
+    fi
+
+    session=$(tmux ls $TMUX_LS_FORMAT | eval "fzf-tmux $FZF_OPT $FZF_PREVIEW --prompt='$1>'")
+    tmux $1 -t "$session"
+}
+
+kill_session() {
+    session_command "kill-session"
+}
+
+attach_session() {
+    command="attach"
+    if [ -n "$TMUX" ]; then
+        command="switch"
+    fi
+
+    session_command $command
+}
+
+case "$1" in
+    "kill")
+        kill_session
+        ;;
+    "attach")
+        attach_session
+        ;;
+    *)
+        die "invalid argument"
+        ;;
+esac
