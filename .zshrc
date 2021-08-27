@@ -42,10 +42,10 @@ export FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard | 
 export FZF_CTRL_T_COMMAND="fd $FD_OPTIONS"
 export FZF_ALT_C_COMMAND="fd --type d $FD_OPTIONS"
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-export PATH=$PATH:$GOPATH/bin:$HOME/Scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin:$HOME/bin:$HOME/.emacs.d/bin
+export PATH=$PATH:$GOPATH/bin:$HOME/.scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin:$HOME/bin:$HOME/.emacs.d/bin
 bindkey "^U" backward-kill-line
 bindkey "^X\x7f" backward-kill-line
 bindkey "^X^_" redo
@@ -61,6 +61,7 @@ alias ls="exa"
 alias ll="exa -l"
 alias cheat="cht.sh"
 alias t="todo.sh"
+alias nv="nvim"
 
 # export LANG=en_US.UTF-8
 fpath=(~/.zsh.d/ $fpath)
