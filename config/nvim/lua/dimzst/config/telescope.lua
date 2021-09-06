@@ -1,6 +1,5 @@
 require "telescope".setup {
 	defaults = {
-		file_sorter = require('telescope.sorters').get_fzy_sorter,
 		file_ignore_patterns = { "node_modules", "vendor"},
 	},
 	pickers = {
@@ -15,8 +14,16 @@ require "telescope".setup {
 			},
 		},
 	},
+	extensions = {
+		fzf = {
+			fuzzy = true,
+			override_generic_sorter = true,
+			override_file_sorter = true,
+			case_mode = "smart_case",
+		}
+	}
 }
-require('telescope').load_extension('fzy_native')
+require('telescope').load_extension('fzf')
 
 vim.api.nvim_set_keymap('n', '<c-p>', '<cmd>Telescope find_files<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', {noremap = true})

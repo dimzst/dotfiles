@@ -29,8 +29,12 @@ local on_attach = function(client, bufnr)
 	require "lsp_signature".on_attach()
 end
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+
 require'lspconfig'.tsserver.setup{
 	on_attach = on_attach,
+	capabilities = capabilities,
 }
 
 local go_on_attach = function(client, bufnr)
@@ -50,6 +54,7 @@ end
 
 require'lspconfig'.gopls.setup{
 	on_attach = go_on_attach,
+	capabilities = capabilities,
 	flags = {
 		debounce_text_changes = 150,
 	},
