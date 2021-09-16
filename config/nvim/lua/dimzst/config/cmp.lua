@@ -1,4 +1,10 @@
 local cmp = require'cmp'
+
+local check_back_space = function()
+  local col = vim.fn.col('.') - 1
+  return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
+end
+
 cmp.setup({
 	snippet = {
 		expand = function(args)
@@ -6,7 +12,7 @@ cmp.setup({
 		end,
 	},
 	mapping = {
-		['<Tab>'] = function(fallback)
+		['<Tab>'] = cmp.mapping(function(fallback)
 			if vim.fn.pumvisible() == 1 then
 				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-n>', true, true, true), 'n')
 			elseif check_back_space() then
@@ -16,8 +22,8 @@ cmp.setup({
 			else
 				fallback()
 			end
-		end,
-		['<S-Tab>'] = function(fallback)
+		end, {"i", "s"}),
+		['<S-Tab>'] = cmp.mapping(function(fallback)
 			if vim.fn.pumvisible() == 1 then
 				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
 			elseif vim.fn['vsnip#available']() == 1 then
@@ -25,7 +31,7 @@ cmp.setup({
 			else
 				fallback()
 			end
-		end,
+		end, {"i", "s"}),
 		['<C-d>'] = cmp.mapping.scroll_docs(-4),
 		['<C-u>'] = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
@@ -58,7 +64,3 @@ cmp.setup({
 	}
 })
 
-local check_back_space = function()
-  local col = vim.fn.col('.') - 1
-  return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
-end

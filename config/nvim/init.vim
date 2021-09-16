@@ -33,10 +33,11 @@ Plug 'folke/zen-mode.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'sainnhe/everforest'
 Plug 'sainnhe/edge'
+Plug 'sainnhe/sonokai'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'edluffy/specs.nvim'
+Plug 'Pocco81/Catppuccino.nvim'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -59,7 +60,6 @@ set mouse=a
 set noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 set relativenumber nu
 set scrolloff=4
-set colorcolumn=80,100
 
 set nobackup noswapfile nowritebackup
 set undofile undodir=~/.vim/undodir
@@ -74,10 +74,15 @@ set updatetime=300
 " set cmdheight=2
 " set jumpoptions+=stack
 
+augroup WinActiveHighLight
+    autocmd!
+    autocmd WinEnter * set cursorline colorcolumn=80,100
+    autocmd WinLeave * set nocursorline colorcolumn=0
+augroup END
+
 " THEME
 syntax on
 set t_Co=256
-set cursorline
 
 if exists('+termguicolors')
 	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -94,10 +99,24 @@ let g:edge_diagnostic_virtual_text = 'colored'
 let g:edge_show_eob = 0
 let g:edge_style = 'aura'
 
-colorscheme edge
+" colorscheme edge
+
+if exists('g:started_by_firenvim')
+	let g:sonokai_transparent_background = 0
+else
+	let g:sonokai_transparent_background = 1
+endif
+
+let g:sonokai_diagnostic_virtual_text = 'colored'
+let g:sonokai_show_eob = 0
+" let g:sonokai_style = 'atlantis'
+let g:sonokai_style = 'espresso'
+
+" colorscheme sonokai
 
 " Transparancy
 " hi Normal guibg=NONE ctermbg=NONE
+" colorscheme edge
 
 
 " NvimTree
@@ -136,20 +155,20 @@ noremap <silent> <Leader>T :NvimTreeFindFile<CR>
 
 " COMPLETION
 " Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " AUTO CLOSE BRACKET
-inoremap <expr> " IsMatchingEnable() ? "\"" :  "\"\"\<left>"
-inoremap <expr> ' IsMatchingEnable() ? "'" :  "''\<left>"
-inoremap <expr> ` IsMatchingEnable() ? "`" :  "``\<left>"
-inoremap <expr> ( IsMatchingEnable() ? "(" :  "()\<left>"
-inoremap <expr> [ IsMatchingEnable() ? "[" :  "[]\<left>"
-inoremap <expr> { IsMatchingEnable() ? "{" :  "{}\<left>"
+" inoremap <expr> " IsMatchingEnable() ? "\"" :  "\"\"\<left>"
+" inoremap <expr> ' IsMatchingEnable() ? "'" :  "''\<left>"
+" inoremap <expr> ` IsMatchingEnable() ? "`" :  "``\<left>"
+" inoremap <expr> ( IsMatchingEnable() ? "(" :  "()\<left>"
+" inoremap <expr> [ IsMatchingEnable() ? "[" :  "[]\<left>"
+" inoremap <expr> { IsMatchingEnable() ? "{" :  "{}\<left>"
 
-function! IsMatchingEnable()
-	return &filetype ==# 'TelescopePrompt'
-endfunction
+" function! IsMatchingEnable()
+" 	return &filetype ==# 'TelescopePrompt'
+" endfunction
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()
