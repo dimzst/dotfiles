@@ -14,16 +14,19 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'branch' : '0.5-compat', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : '0.5-compat'}
 " Plug 'glepnir/lspsaga.nvim'
 Plug 'tami5/lspsaga.nvim'
 Plug 'ray-x/lsp_signature.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'rafamadriz/friendly-snippets'
 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
@@ -37,8 +40,8 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'sainnhe/edge'
 Plug 'sainnhe/sonokai'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'edluffy/specs.nvim'
 Plug 'Pocco81/Catppuccino.nvim'
+Plug 'beauwilliams/focus.nvim'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -153,6 +156,11 @@ noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>zm :ZenMode<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
 noremap <silent> <Leader>T :NvimTreeFindFile<CR>
+
+nnoremap <silent> ]q :cnext<CR>
+nnoremap <silent> [q :cprev<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [b :bprev<CR>
 
 " COMPLETION
 " Use <Tab> and <S-Tab> to navigate through popup menu

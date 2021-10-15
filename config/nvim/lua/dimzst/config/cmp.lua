@@ -13,23 +13,21 @@ cmp.setup({
 	},
 	mapping = {
 		['<Tab>'] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-n>', true, true, true), 'n')
-			elseif check_back_space() then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Tab>', true, true, true), 'n')
-			elseif vim.fn['vsnip#available']() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-expand-or-jump)', true, true, true), '')
-			else
-				fallback()
+			if not cmp.select_next_item() then
+				if vim.fn['vsnip#available']() == 1 then
+					vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-expand-or-jump)', true, true, true), '')
+				else
+					fallback()
+				end
 			end
 		end, {"i", "s"}),
 		['<S-Tab>'] = cmp.mapping(function(fallback)
-			if vim.fn.pumvisible() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
-			elseif vim.fn['vsnip#available']() == 1 then
-				vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true), '')
-			else
-				fallback()
+			if not cmp.select_prev_item() then
+				if vim.fn['vsnip#available']() == 1 then
+					vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>(vsnip-jump-prev)', true, true, true), '')
+				else
+					fallback()
+				end
 			end
 		end, {"i", "s"}),
 		['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -43,6 +41,7 @@ cmp.setup({
 	},
 	sources = {
 		{ name = 'nvim_lsp' },
+		{ name = 'vsnip' },
 		{ name = 'buffer' },
 		{ name = 'path' }
 	},

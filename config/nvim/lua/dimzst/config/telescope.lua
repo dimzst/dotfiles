@@ -31,3 +31,4 @@ vim.api.nvim_set_keymap('n', '<leader>fb', '<cmd>Telescope buffers<cr>', {norema
 vim.api.nvim_set_keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>lua require("telescope.builtin").grep_string({search = vim.fn.input("Search for > ")})<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fw', '<cmd>lua require("telescope.builtin").grep_string({search = vim.fn.expand("<cword>")})<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>fq', '<cmd>lua require("telescope.builtin").quickfix(require("telescope.themes").get_ivy({}))<cr>', {noremap = true})

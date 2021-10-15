@@ -57,6 +57,10 @@ catppuccino.setup(
 	}
 )
 
-catppuccino.remap({},{LineNR = {fg = '#78624e'}, CursorLineNr = {fg = '#F4A261'}})
+catppuccino.remap({},{
+	LineNR = {fg = '#78624e'},
+	CursorLineNr = {fg = '#F4A261'},
+	CursorLine = {bg = '#3b3b3b'},
+})
 
 vim.cmd[[colorscheme catppuccino]]
