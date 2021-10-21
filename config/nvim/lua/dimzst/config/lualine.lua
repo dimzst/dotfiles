@@ -6,6 +6,16 @@ local diag_hi_init = false
 
 local config = {
 	modified_color = '#deb974',
+	separator = {
+		left = {
+			section = '',
+			component = ''
+		},
+		right = {
+			section = '',
+			component = ''
+		}
+	}
 }
 
 local function get_hi_value(bg, fg, gui)
@@ -55,11 +65,10 @@ local function diag_left_sep()
 	end
 
 	if vim.bo.modified then
-		return '%#lualine_diag_left_sep#' .. ' ' .. data
+		return '%#lualine_diag_left_sep#' .. config.separator.left.section .. data
 	end
-	return ' ' .. data
+	return config.separator.left.component .. data
 end
-
 
 local function file_right_sep()
 	local c_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.c.fg, 'NONE')
@@ -79,6 +88,7 @@ local function file_right_sep()
 		avtoc_hi = get_hi_value(config.modified_color, custom_theme.visual.a.bg)
 		aitoc_hi = get_hi_value(config.modified_color, custom_theme.insert.a.bg)
 	end
+
 	vim.api.nvim_command(
         'hi! lualine_c_normal ' .. c_hi)
 	vim.api.nvim_command(
@@ -124,16 +134,17 @@ local function file_right_sep()
         'hi! lualine_c_normal_to_lualine_x_normal ' .. ctox_hi)
 
 	if vim.bo.modified then
-		return '%#lualine_c_normal_to_lualine_x_normal#' .. ''
+		return '%#lualine_c_normal_to_lualine_x_normal#' .. 
+			config.separator.right.section .. '%'
 	end
-	return ' '
+	return config.separator.right.component
 end
 
 require('lualine').setup {
 	options = {
 		theme =  'catppuccino',
-		section_separators = {' ', ' ' },
-		component_separators = {' ', ' '},
+		section_separators = {config.separator.left.section, config.separator.right.section },
+		component_separators = {config.separator.left.component, config.separator.right.component},
 		-- component_separators = {'|', '|'},
 		extensions = {'fugitive'},
 	},

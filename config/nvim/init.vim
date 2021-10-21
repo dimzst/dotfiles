@@ -71,6 +71,8 @@ set undofile undodir=~/.vim/undodir
 set splitbelow
 set splitright
 
+set completeopt=menu,menuone,noselect
+
 set hidden
 set signcolumn=yes
 set shortmess+=c
@@ -162,22 +164,15 @@ nnoremap <silent> [q :cprev<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [b :bprev<CR>
 
+augroup qfKeymap
+	autocmd!
+	autocmd FileType qf nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
+augroup end
+
 " COMPLETION
 " Use <Tab> and <S-Tab> to navigate through popup menu
 " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" AUTO CLOSE BRACKET
-" inoremap <expr> " IsMatchingEnable() ? "\"" :  "\"\"\<left>"
-" inoremap <expr> ' IsMatchingEnable() ? "'" :  "''\<left>"
-" inoremap <expr> ` IsMatchingEnable() ? "`" :  "``\<left>"
-" inoremap <expr> ( IsMatchingEnable() ? "(" :  "()\<left>"
-" inoremap <expr> [ IsMatchingEnable() ? "[" :  "[]\<left>"
-" inoremap <expr> { IsMatchingEnable() ? "{" :  "{}\<left>"
-
-" function! IsMatchingEnable()
-" 	return &filetype ==# 'TelescopePrompt'
-" endfunction
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()

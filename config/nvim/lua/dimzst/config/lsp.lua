@@ -24,7 +24,8 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
 	buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
 	buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-	buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+	buf_set_keymap('n', '<leader>q', '<cmd>lua lsp_diag_qflist()<CR>', opts)
+	buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 	buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
 	require "lsp_signature".on_attach()
@@ -131,24 +132,18 @@ autocmd BufWritePost *.go lua gosaveattach({}, 1000)
 augroup END
 ]])
 
-
--- send diagnostic to quickfix list
-do
-  local method = "textDocument/publishDiagnostics"
-  local default_handler = vim.lsp.handlers[method]
-  vim.lsp.handlers[method] = function(err, method, result, client_id, bufnr, config)
-    default_handler(err, method, result, client_id, bufnr, config)
-    local diagnostics = vim.lsp.diagnostic.get_all()
-    local qflist = {}
-    for bufnr, diagnostic in pairs(diagnostics) do
-      for _, d in ipairs(diagnostic) do
-        d.bufnr = bufnr
-        d.lnum = d.range.start.line + 1
-        d.col = d.range.start.character + 1
-        d.text = d.message
-        table.insert(qflist, d)
-      end
-    end
-    vim.lsp.util.set_qflist(qflist)
-  end
+function lsp_diag_qflist()
+	local diagnostics = vim.lsp.diagnostic.get_all()
+	local qflist = {}
+	for bufnr, diagnostic in pairs(diagnostics) do
+		for _, d in ipairs(diagnostic) do
+			d.bufnr = bufnr
+			d.lnum = d.range.start.line + 1
+			d.col = d.range.start.character + 1
+			d.text = d.message
+			table.insert(qflist, d)
+		end
+	end
+	vim.lsp.util.set_qflist(qflist)
+	vim.cmd [[copen]]
 end
