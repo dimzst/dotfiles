@@ -9,6 +9,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-commentary'
+Plug 'shumphrey/fugitive-gitlab.vim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -55,6 +56,11 @@ lua require('dimzst')
 
 " SETTINGS "{{{
 " ---------------------------------------------------------------------
+let workFile = '~/.config/nvim/work.vim'
+if !empty(workFile)
+	exe 'so' workFile
+endif
+
 set list listchars=eol:¬,tab:>-,trail:~,extends:>,precedes:<,lead:.
 
 set incsearch ignorecase smartcase showmatch nohlsearch
@@ -70,8 +76,6 @@ set undofile undodir=~/.vim/undodir
 
 set splitbelow
 set splitright
-
-set completeopt=menu,menuone,noselect
 
 set hidden
 set signcolumn=yes

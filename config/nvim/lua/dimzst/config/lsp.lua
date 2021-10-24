@@ -1,3 +1,6 @@
+local lspconfig = require('lspconfig')
+local configs = require('lspconfig/configs')
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -34,7 +37,7 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
-require'lspconfig'.tsserver.setup{
+lspconfig.tsserver.setup{
 	on_attach = on_attach,
 	capabilities = capabilities,
 }
@@ -67,6 +70,7 @@ require'lspconfig'.gopls.setup{
 				unusedparams = true,
 			},
 			staticcheck = true,
+			usePlaceholders = true,
 		},
 	}
 }
@@ -147,3 +151,18 @@ function lsp_diag_qflist()
 	vim.lsp.util.set_qflist(qflist)
 	vim.cmd [[copen]]
 end
+
+if not lspconfig.golangcilsp then
+ 	configs.golangcilsp = {
+		default_config = {
+			cmd = {'golangci-lint-langserver'},
+			root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
+			init_options = {
+					command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json" };
+			}
+		};
+	}
+end
+lspconfig.golangcilsp.setup {
+	filetypes = {'go'}
+}
