@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+theme="dark"
+if [ -n "$TMUX_THEME" ]; then
+	theme="$TMUX_THEME"
+fi
+
+if [ "$theme" = "light" ]; then
+	tmux source-file ~/.config/tmux/tmux-light.conf
+else
+	tmux source-file ~/.config/tmux/tmux-dark.conf
+fi

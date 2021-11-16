@@ -1,8 +1,5 @@
 -- local custom_theme = require'dimzst.lualine.themes.edge'
-local custom_theme = require'lualine.themes.catppuccino'
-custom_theme.normal.x = custom_theme.normal.c
-
-local diag_hi_init = false
+local custom_theme = require'lualine.themes.gruvbox-material'
 
 local config = {
 	modified_color = '#deb974',
@@ -15,8 +12,22 @@ local config = {
 			section = '',
 			component = ''
 		}
+	},
+	shorting_target = 40,
+	symbols = {
+		modified = '[+]',
+		readonly = '[-]',
 	}
 }
+
+local function count(base, pattern)
+  return select(2, string.gsub(base, pattern, ''))
+end
+
+local function shorten_path(path, sep)
+  -- ('([^/])[^/]+%/', '%1/', 1)
+  return path:gsub(string.format('([^%s])[^%s]+%%%s', sep, sep, sep), '%1' .. sep, 1)
+end
 
 local function get_hi_value(bg, fg, gui)
 	local data = 'guibg=' .. bg .. ' guifg=' ..  fg
@@ -24,6 +35,37 @@ local function get_hi_value(bg, fg, gui)
 		data = data .. ' gui=' .. gui
 	end
 	return data
+end
+
+local function cust_file_name()
+	local data = vim.fn.expand '%:~:.'
+	if data == '' then
+		data = '[No Name]'
+	end
+
+	local windwidth = vim.fn.winwidth(0)
+	local estimated_space_available = windwidth - config.shorting_target
+
+	local path_separator = package.config:sub(1, 1)
+	for _ = 0, count(data, path_separator) do
+		if windwidth <= 84 or #data > estimated_space_available then
+			data = shorten_path(data, path_separator)
+		end
+	end
+
+	local hi_val = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.c.fg, 'NONE')
+
+	if vim.bo.modified then
+		data = data .. config.symbols.modified
+		hi_val = get_hi_value(custom_theme.normal.c.bg, config.modified_color, 'bold')
+	elseif vim.bo.modifiable == false or vim.bo.readonly == true then
+		data = data .. config.symbols.readonly
+	end
+
+	vim.api.nvim_command(
+        'hi! lualine_cust_file_name_hi ' .. hi_val)
+
+	return '%=' .. '%#lualine_cust_file_name_hi#' .. data
 end
 
 local function lsp_stat()
@@ -40,129 +82,18 @@ local function lsp_stat()
 	return msg
 end
 
-local function diagnostic_count() 
-	local error_count = vim.lsp.diagnostic.get_count(0, 'Error')
-	local warning_count = vim.lsp.diagnostic.get_count(0, 'Warning')
-	local info_count = vim.lsp.diagnostic.get_count(0, 'Information')
-	return error_count + warning_count + info_count
-end
-
-
-
-local function diag_left_sep()
-	local data = '%='
-
-	local count = diagnostic_count()
-	if count == 0 then
-		return data
-	end
-
-	if diag_hi_init == false then
-		local highlight = get_hi_value(config.modified_color, custom_theme.normal.c.bg)
-		vim.api.nvim_command(
-			'hi! lualine_diag_left_sep ' .. highlight)
-		diag_hi_init = true
-	end
-
-	if vim.bo.modified then
-		return '%#lualine_diag_left_sep#' .. config.separator.left.section .. data
-	end
-	return config.separator.left.component .. data
-end
-
-local function file_right_sep()
-	local c_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.c.fg, 'NONE')
-	local btoc_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.b.bg)
-	local ctox_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.c.bg)
-	local antoc_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.a.bg)
-	local actoc_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.command.a.bg)
-	local avtoc_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.visual.a.bg)
-	local aitoc_hi = get_hi_value(custom_theme.normal.c.bg, custom_theme.insert.a.bg)
-
-	if vim.bo.modified then
-		c_hi = get_hi_value(config.modified_color, custom_theme.normal.a.fg, 'bold')
-		btoc_hi = get_hi_value(config.modified_color, custom_theme.normal.b.bg)
-		ctox_hi = get_hi_value(config.modified_color, custom_theme.normal.c.bg)
-		antoc_hi = get_hi_value(config.modified_color, custom_theme.normal.a.bg)
-		actoc_hi = get_hi_value(config.modified_color, custom_theme.command.a.bg)
-		avtoc_hi = get_hi_value(config.modified_color, custom_theme.visual.a.bg)
-		aitoc_hi = get_hi_value(config.modified_color, custom_theme.insert.a.bg)
-	end
-
-	vim.api.nvim_command(
-        'hi! lualine_c_normal ' .. c_hi)
-	vim.api.nvim_command(
-        'hi! lualine_c_insert ' .. c_hi)
-	vim.api.nvim_command(
-        'hi! lualine_c_visual ' .. c_hi)
-	vim.api.nvim_command(
-        'hi! lualine_c_command ' .. c_hi)
-	
-	vim.api.nvim_command(
-        'hi! lualine_a_normal_to_lualine_c_normal ' .. antoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_insert_to_lualine_c_insert ' .. aitoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_insert_to_lualine_c_normal ' .. aitoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_command_to_lualine_c_command ' .. actoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_command_to_lualine_c_normal ' .. actoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_visual_to_lualine_c_visual ' .. avtoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_a_visual_to_lualine_c_normal ' .. avtoc_hi)
-
-	vim.api.nvim_command(
-        'hi! lualine_b_normal_to_lualine_c_normal ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_insert_to_lualine_c_insert ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_insert_to_lualine_c_normal ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_normal_to_lualine_c_command ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_command_to_lualine_c_normal ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_command_to_lualine_c_command ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_visual_to_lualine_c_visual ' .. btoc_hi)
-	vim.api.nvim_command(
-        'hi! lualine_b_visual_to_lualine_c_normal ' .. btoc_hi)
-
-	vim.api.nvim_command(
-        'hi! lualine_c_normal_to_lualine_x_normal ' .. ctox_hi)
-
-	if vim.bo.modified then
-		return '%#lualine_c_normal_to_lualine_x_normal#' .. 
-			config.separator.right.section .. '%'
-	end
-	return config.separator.right.component
-end
-
 require('lualine').setup {
 	options = {
-		theme =  'catppuccino',
-		section_separators = {config.separator.left.section, config.separator.right.section },
-		component_separators = {config.separator.left.component, config.separator.right.component},
-		-- component_separators = {'|', '|'},
-		extensions = {'fugitive'},
+		theme =  custom_theme,
+		section_separators = { left = config.separator.left.section, right = config.separator.right.section },
+		component_separators = { left = config.separator.left.component, right = config.separator.right.component},
+		extensions = {'fugitive', 'quickfix', 'nvim-tree'},
 	},
 	sections = {
 		lualine_c = {
-			{
-				'diagnostics',
-				sources = {'nvim_lsp'},
-				sections = {'error', 'warn', 'info'},
-				color_warn = '#deb974',
-				symbols = {error = ' ', warn = ' ', info = ' '},
-				separator = '',
-			},
-			{diag_left_sep, separator = '', left_padding=0},
-			{'filename', path = 1, separator = ''},
+			{cust_file_name, separator = '', left_padding=0},
 		},
 		lualine_x = {
-			{file_right_sep, separator = ''},
 			{'encoding'},
 			{'fileformat'},
 			{'filetype'},

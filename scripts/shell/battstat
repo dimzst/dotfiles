@@ -2,20 +2,30 @@
 
 declare -A barmap=(["0"]="" ["1"]="" ["2"]="" ["3"]="" ["4"]="" ["5"]="" ["6"]="" ["7"]="" ["8"]="" ["9"]="" ["10"]="")
 
-declare -A statusmap=(["AC attached"]="ﳥ" ["charging"]="ﮣ" ["discharging"]="ﮤ")
+declare -A statusmap=(["AC attached"]="ﳥ" ["charged"]="ﳥ" ["charging"]="ﮣ" ["discharging"]="ﮤ")
 
 declare -A barcol
 declare -A statuscol
 
 colbuf="10"
 
+theme="dark"
+if [ -n "$2" ]; then
+	theme="$2"
+fi
+
 if { [ -n "$1" ] && [ $1 = "tmux" ]; } then
 	barcol=(["0"]="#[fg=colour1]" ["1"]="#[fg=colour11]" ["2"]="#[fg=colour10]" ["3"]="#[fg=colour50]" ["4"]="#[fg=colour39]")
-	statuscol=(["AC attached"]="#[fg=colour39]" ["charging"]="#[fg=colour82]" ["discharging"]="#[fg=colour160]")
-	nc="#[fg=colour255]"
+	statuscol=(["AC attached"]="#[fg=colour39]" ["charged"]="#[fg=colour39]" ["charging"]="#[fg=colour82]" ["discharging"]="#[fg=colour160]")
+
+	if [ $theme = "dark" ]; then
+		nc="#[fg=colour255]"
+	else
+		nc="#[fg=colour0]"
+	fi
 else
 	barcol=(["0"]="\033[38;5;1m" ["1"]="\033[38;5;11m" ["2"]="\033[38;5;10m" ["3"]="\033[38;5;50m" ["4"]="\033[38;5;39m")
-	statuscol=(["AC attached"]="\033[38;5;39m" ["charging"]="\033[38;5;82m" ["discharging"]="\033[38;5;160m")
+	statuscol=(["AC attached"]="\033[38;5;39m" ["charged"]="\033[38;5;39m" ["charging"]="\033[38;5;82m" ["discharging"]="\033[38;5;160m")
 	nc="\033[0m"
 fi
 

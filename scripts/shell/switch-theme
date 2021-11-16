@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+ALACRITTY_CONFIG_DIR="$HOME/.config/alacritty"
+ALACRITTY_COLOR_FILE="color.yml"
+ALACRITTY_CONFIG_FILE="$ALACRITTY_CONFIG_DIR/$ALACRITTY_COLOR_FILE"
+NVIM_CONFIG_DIR="$HOME/.config/nvim"
+NVIM_CONFIG_FILE="$NVIM_CONFIG_DIR/init.vim"
+
+THEME="dark"
+if [ -n "$1" ]; then
+	THEME=$1
+fi
+
+export TERM_THEME=$THEME
+
+switch-alactritty() {
+	if [ ! -f "$ALACRITTY_CONFIG_FILE" ]; then
+		echo "$ALACRITTY_CONFIG_FILE not found" 1>&2;
+		exit 1
+	fi
+
+	theme=$1
+	if [ "$theme" = "dark" ]; then
+		alacritty_theme="gruvbox_material_medium_dark"
+	else
+		alacritty_theme="gruvbox_material_medium_light"
+	fi
+
+	REAL_CONFIG="$(readlink $ALACRITTY_CONFIG_DIR)/$ALACRITTY_COLOR_FILE"
+
+	sed -i "" -e "s#^colors: \*.*#colors: *$alacritty_theme#g" $REAL_CONFIG
+
+}
+
+switch-tmux() {
+	theme=$1
+	if [ "$theme" = "dark" ]; then
+		tmux source-file ~/.config/tmux/tmux-dark.conf
+	else
+		tmux source-file ~/.config/tmux/tmux-light.conf
+	fi
+}
+
+switch-nvim() {
+	theme=$1
+
+	if [ ! -f "$NVIM_CONFIG_FILE" ]; then
+		echo "$NVIM_CONFIG_FILE not found" 1>&2;
+		exit 1
+	fi
+
+	REAL_CONFIG="$(readlink $NVIM_CONFIG_FILE)"
+	sed -i "" -e "s#^set background=*.*#set background=$theme#g" $REAL_CONFIG
+
+	is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+		| grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+	for pane in $(tmux lsp -a -F "#{session_name}:#{window_index}.#{pane_index}"); do
+		tmux if-shell -t "$pane" "$is_vim" "send-keys -t $pane escape ENTER"
+		tmux if-shell -t "$pane" "$is_vim" "send-keys -t $pane ':ChangeTheme $theme' ENTER"
+	done
+}
+
+switch-alactritty $THEME
+switch-tmux $THEME
+switch-nvim $THEME

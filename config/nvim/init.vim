@@ -17,9 +17,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch' : '0.5-compat', 'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : '0.5-compat'}
-" Plug 'glepnir/lspsaga.nvim'
-Plug 'tami5/lspsaga.nvim'
-Plug 'ray-x/lsp_signature.nvim'
+Plug 'tami5/lspsaga.nvim', {'branch' : 'nvim51'}
+" Plug 'ray-x/lsp_signature.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -37,12 +36,12 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'folke/zen-mode.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'hoob3rt/lualine.nvim'
-Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'sainnhe/edge'
-Plug 'sainnhe/sonokai'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'Pocco81/Catppuccino.nvim'
+Plug 'catppuccin/nvim'
 Plug 'beauwilliams/focus.nvim'
+Plug 'goolord/alpha-nvim'
+Plug 'sainnhe/gruvbox-material'
+Plug 'junegunn/goyo.vim'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -61,6 +60,8 @@ if !empty(workFile)
 	exe 'so' workFile
 endif
 
+set background=dark
+
 set list listchars=eol:¬,tab:>-,trail:~,extends:>,precedes:<,lead:.
 
 set incsearch ignorecase smartcase showmatch nohlsearch
@@ -69,7 +70,7 @@ set mouse=a
 
 set noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
 set relativenumber nu
-set scrolloff=4
+set scrolloff=5
 
 set nobackup noswapfile nowritebackup
 set undofile undodir=~/.vim/undodir
@@ -100,34 +101,9 @@ if exists('+termguicolors')
 	set termguicolors
 endif
 
-if exists('g:started_by_firenvim')
-	let g:edge_transparent_background = 0
-else
-	let g:edge_transparent_background = 1
-endif
-let g:edge_diagnostic_virtual_text = 'colored'
-let g:edge_show_eob = 0
-let g:edge_style = 'aura'
-
-" colorscheme edge
-
-if exists('g:started_by_firenvim')
-	let g:sonokai_transparent_background = 0
-else
-	let g:sonokai_transparent_background = 1
-endif
-
-let g:sonokai_diagnostic_virtual_text = 'colored'
-let g:sonokai_show_eob = 0
-" let g:sonokai_style = 'atlantis'
-let g:sonokai_style = 'espresso'
-
-" colorscheme sonokai
-
 " Transparancy
 " hi Normal guibg=NONE ctermbg=NONE
 " colorscheme edge
-
 
 " NvimTree
 let g:nvim_tree_side='right'
@@ -159,9 +135,9 @@ noremap <Leader>cv "*p
 vnoremap p "0p
 
 noremap <silent> <Leader>gs :Git<CR>
-noremap <silent> <Leader>zm :ZenMode<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
 noremap <silent> <Leader>T :NvimTreeFindFile<CR>
+noremap <silent> <Leader>gg :Goyo<CR>
 
 nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
@@ -201,6 +177,24 @@ command! -nargs=? SetTab call SetTab(<q-args>)
 function! SetTab(num)
 	let num = a:num == '' ? 4 : a:num
 	execute printf('set tabstop=%s softtabstop=%s shiftwidth=%s', num, num, num)
+endfunction
+
+command! -nargs=? ChangeTheme call ChangeTheme(<q-args>)
+function! ChangeTheme(theme)
+	let theme = a:theme == '' ? &background : a:theme
+	if theme == 'dark'
+		set background=dark
+	else
+		set background=light
+	endif
+	execute "ReloadLua"
+endfunction
+
+command! -nargs=? ReloadLua call ReloadLua()
+function! ReloadLua()
+	execute "lua require('plenary.reload').reload_module('dimzst', true)"
+	execute "lua require('plenary.reload').reload_module('lualine', true)"
+	execute "lua require('dimzst')"
 endfunction
 " ---------------------------------------------------------------------
 " }}}

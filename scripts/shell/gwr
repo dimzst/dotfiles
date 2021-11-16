@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+TO_BE_REMOVE="$1"
+GIT_WORKTREE_OPTS="$2"
+
+if [ -z "$TO_BE_REMOVE" ]; then
+	echo "worktree to be remove is required" 1>&2;
+	exit 1;
+fi
+
+BRANCH="$(git worktree list | grep $TO_BE_REMOVE | awk '{print $3}' | tr -d \[\])"
+if [ "$BRANCH" == "" ]; then
+	echo "could not identify worktree branch" 1>&2;
+	exit 1;
+fi
+
+git worktree remove $TO_BE_REMOVE $GIT_WORKTREE_OPTS
+git branch -D $BRANCH

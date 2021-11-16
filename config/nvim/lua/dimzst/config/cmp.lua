@@ -11,6 +11,9 @@ cmp.setup({
 			vim.fn["vsnip#anonymous"](args.body)
 		end,
 	},
+	documentation = {
+		border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'}  -- in a clockwise order
+	},
 	mapping = {
 		['<Tab>'] = cmp.mapping(function(fallback)
 			if vim.fn['vsnip#available']() == 1 then
