@@ -13,22 +13,21 @@ local on_attach = function(client, bufnr)
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
 	buf_set_keymap('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', opts)
-	buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
+	buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 	buf_set_keymap('n', 'gi', '<cmd>Telescope lsp_implementations<CR>', opts)
-	buf_set_keymap('n', '<leader>sh', '<cmd>Lspsaga signature_help<CR>', opts)
+	buf_set_keymap('n', '<leader>sh', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 	-- buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
 	-- buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
 	-- buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 	buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-	buf_set_keymap('n', '<leader>rn', '<cmd>Lspsaga rename<CR>', opts)
-	-- buf_set_keymap('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
+    buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 	buf_set_keymap('n', '<leader>ca', "<cmd>lua require'telescope.builtin'.lsp_code_actions(require('telescope.themes').get_cursor({}))<CR>", opts)
 	buf_set_keymap('n', 'gr', '<cmd>Telescope lsp_references<CR>', opts)
 	buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-	buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
-	buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-	buf_set_keymap('n', '<leader>q', '<cmd>lua lsp_diag_qflist()<CR>', opts)
-	buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+	buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+	buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+	buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setqflist()<CR>', opts)
+	buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
 	buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 end
 
@@ -62,24 +61,6 @@ local go_on_attach = function(client, bufnr)
 	local opts = { noremap=true, silent=true }
 	buf_set_keymap("n", "<leader>oi", "<cmd>lua goimports({}, 1000)<CR>", opts)
 end
-
-require'lspconfig'.gopls.setup{
-	on_attach = go_on_attach,
-	capabilities = capabilities,
-	flags = {
-		debounce_text_changes = 150,
-	},
-	cmd = {"gopls", "serve"},
-	settings = {
-		gopls = {
-			analyses = {
-				unusedparams = true,
-			},
-			staticcheck = true,
-			usePlaceholders = true,
-		},
-	}
-}
 
 function gofmtimports(timeoutms)
 	vim.lsp.buf.formatting_sync(nil, timeout_ms)
@@ -134,6 +115,24 @@ function gosaveattach(timeoutms)
 	end
 end
 
+lspconfig.gopls.setup{
+	on_attach = go_on_attach,
+	capabilities = capabilities,
+	flags = {
+		debounce_text_changes = 150,
+	},
+	cmd = {"gopls", "serve"},
+	settings = {
+		gopls = {
+			analyses = {
+				unusedparams = true,
+			},
+			staticcheck = true,
+			usePlaceholders = true,
+		},
+	}
+}
+
 vim.cmd([[
 augroup goplsattach
 autocmd!
@@ -142,33 +141,17 @@ autocmd BufWritePost *.go lua gosaveattach({}, 1000)
 augroup END
 ]])
 
-function lsp_diag_qflist()
-	local diagnostics = vim.lsp.diagnostic.get_all()
-	local qflist = {}
-	for bufnr, diagnostic in pairs(diagnostics) do
-		for _, d in ipairs(diagnostic) do
-			d.bufnr = bufnr
-			d.lnum = d.range.start.line + 1
-			d.col = d.range.start.character + 1
-			d.text = d.message
-			table.insert(qflist, d)
-		end
-	end
-	vim.lsp.util.set_qflist(qflist)
-	vim.cmd [[copen]]
-end
+local rust_opts = {
+    server = {
+		on_attach = on_attach,
+        settings = {
+            ["rust-analyzer"] = {
+                checkOnSave = {
+                    command = "clippy"
+                },
+            }
+        }
+    },
+}
 
--- if not lspconfig.golangcilsp then
---  	configs.golangcilsp = {
--- 		default_config = {
--- 			cmd = {'golangci-lint-langserver'},
--- 			root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
--- 			init_options = {
--- 					command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json" };
--- 			}
--- 		};
--- 	}
--- end
--- lspconfig.golangcilsp.setup {
--- 	filetypes = {'go'}
--- }
+require('rust-tools').setup(rust_opts)

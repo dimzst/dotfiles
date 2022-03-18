@@ -6,7 +6,7 @@ require'nvim-treesitter.configs'.setup {
 	textobjects = {
 		select = {
 			enable = true,
-			-- Automatically jump forward to textobj, similar to targets.vim 
+			-- Automatically jump forward to textobj, similar to targets.vim
 			lookahead = true,
 			keymaps = {
 				-- You can use the capture groups defined in textobjects.scm
@@ -14,6 +14,9 @@ require'nvim-treesitter.configs'.setup {
 				["if"] = "@function.inner",
 				["ac"] = "@class.outer",
 				["ic"] = "@class.inner",
+				["av"] = "@variable.outer",
+				["iv"] = "@variable.inner",
+				["vi"] = "@variable.identifier",
 			},
 		},
 		swap = {
@@ -46,13 +49,4 @@ require'nvim-treesitter.configs'.setup {
 			},
 		},
 	},
-}
-
-local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
-parser_configs.http = {
-  install_info = {
-    url = "https://github.com/NTBBloodbath/tree-sitter-http",
-    files = { "src/parser.c" },
-    branch = "main",
-  },
 }

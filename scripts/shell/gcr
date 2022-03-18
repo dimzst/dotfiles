@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+git checkout $(git branch --sort=-committerdate --format='%(refname:short) | %(objectname:short) | %(authorname:short) | %(committerdate:relative)' | column -t -s "|" | fzf | awk '{print $1}')

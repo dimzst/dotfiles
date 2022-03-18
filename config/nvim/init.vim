@@ -8,17 +8,18 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-commentary'
 Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'numToStr/Comment.nvim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-treesitter/nvim-treesitter', {'branch' : '0.5-compat', 'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : '0.5-compat'}
-Plug 'tami5/lspsaga.nvim', {'branch' : 'nvim51'}
-" Plug 'ray-x/lsp_signature.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'branch' : 'master', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : 'master'}
+Plug 'ray-x/lsp_signature.nvim'
+Plug 'nvim-treesitter/playground'
+Plug 'stevearc/dressing.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -27,13 +28,17 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
+Plug 'mfussenegger/nvim-lint'
 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'AckslD/nvim-neoclip.lua'
+Plug 'simrat39/rust-tools.nvim'
+Plug 'vim-test/vim-test'
+Plug 'skywind3000/asyncrun.vim'
 
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'folke/zen-mode.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -42,6 +47,7 @@ Plug 'beauwilliams/focus.nvim'
 Plug 'goolord/alpha-nvim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'junegunn/goyo.vim'
+Plug 'ntpeters/vim-better-whitespace'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -68,7 +74,7 @@ set incsearch ignorecase smartcase showmatch nohlsearch
 set noerrorbells novisualbell
 set mouse=a
 
-set noexpandtab tabstop=4 softtabstop=4 shiftwidth=4
+set expandtab tabstop=4 softtabstop=4 shiftwidth=4
 set relativenumber nu
 set scrolloff=5
 
@@ -109,7 +115,7 @@ endif
 let g:nvim_tree_side='right'
 
 " FireNvim
-let g:firenvim_config = { 
+let g:firenvim_config = {
 			\ 'globalSettings': {
 				\ 'alt': 'all',
 				\ '<C-i>': 'noop',
@@ -124,6 +130,10 @@ let g:firenvim_config = {
 						\ },
 						\ }
 						\ }
+
+" vim-test
+let test#strategy = "asyncrun_background"
+
 " ---------------------------------------------------------------------
 " }}}
 
@@ -138,6 +148,9 @@ noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
 noremap <silent> <Leader>T :NvimTreeFindFile<CR>
 noremap <silent> <Leader>gg :Goyo<CR>
+
+nmap <silent> <leader>y :TestNearest<CR>
+nmap <silent> <leader>Y :TestFile<CR>
 
 nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
@@ -195,6 +208,12 @@ function! ReloadLua()
 	execute "lua require('plenary.reload').reload_module('dimzst', true)"
 	execute "lua require('plenary.reload').reload_module('lualine', true)"
 	execute "lua require('dimzst')"
+endfunction
+
+command! -nargs=? GuiFont call GuiFont(<q-args>)
+function! GuiFont(num)
+	let num = a:num == '' ? 10 : a:num
+	execute printf('set guifont=IosevkaNerdFont:h%s', num)
 endfunction
 " ---------------------------------------------------------------------
 " }}}

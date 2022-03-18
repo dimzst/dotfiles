@@ -1,6 +1,6 @@
-require "telescope".setup {
+require('telescope').setup({
 	defaults = {
-		file_ignore_patterns = { "node_modules", "vendor", "^.git/" },
+		file_ignore_patterns = { "node_modules", "vendor", ".git/" },
 	},
 	pickers = {
 		buffers = {
@@ -22,8 +22,9 @@ require "telescope".setup {
 			case_mode = "smart_case",
 		}
 	}
-}
+})
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('neoclip')
 
 vim.api.nvim_set_keymap('n', '<c-p>', '<cmd>Telescope find_files hidden=true<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<cr>', {noremap = true})
@@ -32,3 +33,5 @@ vim.api.nvim_set_keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', {nore
 vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>lua require("telescope.builtin").grep_string({search = vim.fn.input("Search for > ")})<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fw', '<cmd>lua require("telescope.builtin").grep_string({search = vim.fn.expand("<cword>")})<cr>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>fq', '<cmd>lua require("telescope.builtin").quickfix(require("telescope.themes").get_ivy({}))<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>nc', '<cmd>Telescope neoclip star<cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>ny', '<cmd>Telescope neoclip <cr>', {noremap = true})
