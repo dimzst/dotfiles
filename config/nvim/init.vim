@@ -27,6 +27,8 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'mfussenegger/nvim-lint'
 
@@ -45,9 +47,10 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'catppuccin/nvim'
 Plug 'beauwilliams/focus.nvim'
 Plug 'goolord/alpha-nvim'
-Plug 'sainnhe/gruvbox-material'
 Plug 'junegunn/goyo.vim'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'sainnhe/gruvbox-material'
+Plug 'rebelot/kanagawa.nvim'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -81,8 +84,7 @@ set scrolloff=5
 set nobackup noswapfile nowritebackup
 set undofile undodir=~/.vim/undodir
 
-set splitbelow
-set splitright
+set splitbelow splitright
 
 set hidden
 set signcolumn=yes
@@ -102,9 +104,9 @@ syntax on
 set t_Co=256
 
 if exists('+termguicolors')
-	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-	let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-	set termguicolors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
 endif
 
 " Transparancy
@@ -116,20 +118,20 @@ let g:nvim_tree_side='right'
 
 " FireNvim
 let g:firenvim_config = {
-			\ 'globalSettings': {
-				\ 'alt': 'all',
-				\ '<C-i>': 'noop',
-				\  },
-				\ 'localSettings': {
-					\ '.*': {
-						\ 'cmdline': 'neovim',
-						\ 'content': 'text',
-						\ 'priority': 0,
-						\ 'selector': 'textarea',
-						\ 'takeover': 'never',
-						\ },
-						\ }
-						\ }
+            \ 'globalSettings': {
+                \ 'alt': 'all',
+                \ '<C-i>': 'noop',
+                \  },
+                \ 'localSettings': {
+                    \ '.*': {
+                        \ 'cmdline': 'neovim',
+                        \ 'content': 'text',
+                        \ 'priority': 0,
+                        \ 'selector': 'textarea',
+                        \ 'takeover': 'never',
+                        \ },
+                        \ }
+                        \ }
 
 " vim-test
 let test#strategy = "asyncrun_background"
@@ -142,7 +144,7 @@ let test#strategy = "asyncrun_background"
 " CLIPBOARD
 noremap <Leader>cc "*y
 noremap <Leader>cv "*p
-vnoremap p "0p
+" vnoremap p "0p
 
 noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
@@ -158,26 +160,21 @@ nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [b :bprev<CR>
 
 augroup qfKeymap
-	autocmd!
-	autocmd FileType qf nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
+    autocmd!
+    autocmd FileType qf nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
 augroup end
-
-" COMPLETION
-" Use <Tab> and <S-Tab> to navigate through popup menu
-" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()
-	nnoremap <C-J> <C-W><C-J>
-	nnoremap <C-K> <C-W><C-K>
-	nnoremap <C-L> <C-W><C-L>
-	nnoremap <C-H> <C-W><C-H>
+    nnoremap <C-J> <C-W><C-J>
+    nnoremap <C-K> <C-W><C-K>
+    nnoremap <C-L> <C-W><C-L>
+    nnoremap <C-H> <C-W><C-H>
 endfunction
 
 augroup netrwRemap
-	autocmd!
-	autocmd FileType netrw call s:PaneNavigationRemap()
+    autocmd!
+    autocmd FileType netrw call s:PaneNavigationRemap()
 augroup end
 
 call s:PaneNavigationRemap()
@@ -188,32 +185,47 @@ call s:PaneNavigationRemap()
 " ---------------------------------------------------------------------
 command! -nargs=? SetTab call SetTab(<q-args>)
 function! SetTab(num)
-	let num = a:num == '' ? 4 : a:num
-	execute printf('set tabstop=%s softtabstop=%s shiftwidth=%s', num, num, num)
+    let num = a:num == '' ? 4 : a:num
+    execute printf('set tabstop=%s softtabstop=%s shiftwidth=%s', num, num, num)
 endfunction
 
 command! -nargs=? ChangeTheme call ChangeTheme(<q-args>)
 function! ChangeTheme(theme)
-	let theme = a:theme == '' ? &background : a:theme
-	if theme == 'dark'
-		set background=dark
-	else
-		set background=light
-	endif
-	execute "ReloadLua"
+    let theme = a:theme == '' ? &background : a:theme
+    if theme == 'dark'
+        set background=dark
+    else
+        set background=light
+    endif
+    execute "ReloadLua"
 endfunction
 
 command! -nargs=? ReloadLua call ReloadLua()
 function! ReloadLua()
-	execute "lua require('plenary.reload').reload_module('dimzst', true)"
-	execute "lua require('plenary.reload').reload_module('lualine', true)"
-	execute "lua require('dimzst')"
+    execute "lua require('plenary.reload').reload_module('dimzst', true)"
+    execute "lua require('plenary.reload').reload_module('lualine', true)"
+    execute "lua require('dimzst')"
 endfunction
 
 command! -nargs=? GuiFont call GuiFont(<q-args>)
 function! GuiFont(num)
-	let num = a:num == '' ? 10 : a:num
-	execute printf('set guifont=IosevkaNerdFont:h%s', num)
+    let num = a:num == '' ? 10 : a:num
+    execute printf('set guifont=IosevkaNerdFont:h%s', num)
 endfunction
+
+command! -nargs=? GolangciDiag call GolangciDiag()
+function! GolangciDiag()
+    execute "cexpr system('golangci-lint run ./...')"
+endfunction
+
+autocmd FileType go setlocal noexpandtab
+autocmd FileType yaml setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+" ---------------------------------------------------------------------
+" }}}
+
+" Override "{{{
+" ---------------------------------------------------------------------
+autocmd FileType go setlocal noexpandtab
+autocmd FileType yaml setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " ---------------------------------------------------------------------
 " }}}
