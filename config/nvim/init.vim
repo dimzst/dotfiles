@@ -38,6 +38,7 @@ Plug 'AckslD/nvim-neoclip.lua'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'vim-test/vim-test'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'godlygeek/tabular'
 
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -46,7 +47,6 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'catppuccin/nvim'
 Plug 'beauwilliams/focus.nvim'
-Plug 'goolord/alpha-nvim'
 Plug 'junegunn/goyo.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sainnhe/gruvbox-material'
@@ -226,6 +226,6 @@ autocmd FileType yaml setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " Override "{{{
 " ---------------------------------------------------------------------
 autocmd FileType go setlocal noexpandtab
-autocmd FileType yaml setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType yaml,proto setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " ---------------------------------------------------------------------
 " }}}
