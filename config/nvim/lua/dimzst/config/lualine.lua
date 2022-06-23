@@ -19,52 +19,9 @@ local config = {
     }
 }
 
-local function count(base, pattern)
-    return select(2, string.gsub(base, pattern, ''))
-end
-
-local function shorten_path(path, sep)
-    return path:gsub(string.format('([^%s])[^%s]+%%%s', sep, sep, sep), '%1' .. sep, 1)
-end
-
-local function get_hi_value(bg, fg, gui)
-    local data = 'guibg=' .. bg .. ' guifg=' ..  fg
-    if gui ~= nil and gui ~= '' then
-        data = data .. ' gui=' .. gui
-    end
-    return data
-end
-
-local function cust_file_name()
-    local data = vim.fn.expand '%:~:.'
-    if data == '' then
-        data = '[No Name]'
-    end
-
-    local windwidth = vim.fn.winwidth(0)
-    local estimated_space_available = windwidth - config.shorting_target
-
-    local path_separator = package.config:sub(1, 1)
-    for _ = 0, count(data, path_separator) do
-        if windwidth <= 84 or #data > estimated_space_available then
-            data = shorten_path(data, path_separator)
-        end
-    end
-
-    local hi_val = get_hi_value(custom_theme.normal.c.bg, custom_theme.normal.c.fg, 'NONE')
-
-    if vim.bo.modified then
-        data = data .. config.symbols.modified
-        hi_val = get_hi_value(custom_theme.normal.c.bg, config.modified_color, 'bold')
-    elseif vim.bo.modifiable == false or vim.bo.readonly == true then
-        data = data .. config.symbols.readonly
-    end
-
-    vim.api.nvim_command(
-    'hi! lualine_cust_file_name_hi ' .. hi_val)
-
-    return '%=' .. '%#lualine_cust_file_name_hi#' .. data
-end
+local ignoreFT = {
+    ['TelescopePrompt'] = true,
+}
 
 local function lsp_stat()
     local msg = ''
@@ -80,22 +37,45 @@ local function lsp_stat()
     return msg
 end
 
-require('lualine').setup {
+-- attach custom function to theme section c
+for k,v in pairs(custom_theme) do
+    for section, orig in pairs(v) do
+        if section == 'c' then
+            custom_theme[k][section] = function()
+                if ignoreFT[vim.bo.filetype] then
+                    return orig
+                end
+
+                if vim.bo.modified then
+                    return {fg = orig.bg, bg = config.modified_color, gui = 'bold'}
+                elseif vim.bo.modifiable == false or vim.bo.readonly == true then
+                    return orig
+                end
+            end
+        end
+    end
+end
+
+require('lualine').setup({
     options = {
         theme =  custom_theme,
         section_separators = { left = config.separator.left.section, right = config.separator.right.section },
         component_separators = { left = config.separator.left.component, right = config.separator.right.component},
         extensions = {'fugitive', 'quickfix', 'nvim-tree'},
+        always_divide_middle = false,
+        globalstatus = true
     },
     sections = {
         lualine_c = {
-            {cust_file_name, separator = '', left_padding=0},
+            {
+                'filename',
+            },
         },
         lualine_x = {
             {'encoding'},
             {'fileformat'},
-            {'filetype'},
+            {'filetype', colored = false},
             {lsp_stat},
         },
     }
-}
+})

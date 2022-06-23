@@ -6,10 +6,9 @@ require('lint').linters_by_ft = {
     go = {'golangcilint'}
 }
 
-vim.cmd([[
-    augroup linter
-    autocmd!
-    autocmd BufReadPost,FileReadPost * lua require('lint').try_lint()
-    autocmd BufWritePost * lua require('lint').try_lint()
-    augroup END
-]])
+local group = vim.api.nvim_create_augroup("linter", { clear = true })
+vim.api.nvim_create_autocmd({"BufWritePost", "BufReadPost", "FileReadPost"}, {
+    pattern = "*",
+    command = "lua require('lint').try_lint()",
+    group = group,
+})

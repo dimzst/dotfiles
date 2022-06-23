@@ -1,5 +1,6 @@
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
+require('nvim-treesitter.configs').setup({
+    ensure_installed = "all",
+    ignore_install = { "phpdoc" }, --[[ https://github.com/claytonrcarter/tree-sitter-phpdoc/issues/15 ]]
     highlight = {
         enable = true,
     },
@@ -49,4 +50,4 @@ require'nvim-treesitter.configs'.setup {
             },
         },
     },
-}
+})

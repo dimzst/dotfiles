@@ -17,16 +17,16 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch' : 'master', 'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : 'master'}
-Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-treesitter/playground'
+Plug 'nvim-treesitter/nvim-treesitter-context'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'stevearc/dressing.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-vsnip'
-Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/cmp-cmdline'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
@@ -51,6 +51,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sainnhe/gruvbox-material'
 Plug 'rebelot/kanagawa.nvim'
+Plug 'https://gitlab.com/yorickpeterse/nvim-pqf.git'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -132,6 +133,14 @@ let g:firenvim_config = {
                         \ },
                         \ }
                         \ }
+
+if exists('g:started_by_firenvim') && g:started_by_firenvim
+    augroup FireNvimFT
+        autocmd!
+        autocmd BufEnter *.txt set filetype=markdown
+        autocmd BufEnter go.dev_play_*.txt set filetype=go | call GuiFont(12)
+    augroup END
+endif
 
 " vim-test
 let test#strategy = "asyncrun_background"
