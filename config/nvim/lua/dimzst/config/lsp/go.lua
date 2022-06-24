@@ -21,22 +21,24 @@ local go_fmt_import = function(timeout_ms)
     go_import(timeout_ms)
 end
 
-local go_on_attach = function(client, bufnr)
-    common.on_attach(client, bufnr)
+local go_on_attach = function(next)
+    return function(client, bufnr)
+        local group = vim.api.nvim_create_augroup("goplsgroup", { clear = true })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = "*.go",
+            callback = function() go_fmt_import(1000) end,
+            group = group,
+        })
 
-    local group = vim.api.nvim_create_augroup("goplsgroup", { clear = true })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function() go_fmt_import(1000) end,
-        group = group,
-    })
+        local opts = { noremap=true, silent=true, buffer=bufnr }
+        vim.keymap.set('n', '<leader>oi', function() go_import(1000) end, opts)
 
-    local opts = { noremap=true, silent=true, buffer=bufnr }
-    vim.keymap.set('n', '<leader>oi', function() go_import(1000) end, bufopts)
+        next(client, bufnr)
+    end
 end
 
 lspconfig.gopls.setup({
-    on_attach = go_on_attach,
+    on_attach = go_on_attach(common.on_attach),
     capabilities = common.capabilities,
     flags = {
         debounce_text_changes = 150,
@@ -87,6 +89,6 @@ vim.api.nvim_create_autocmd("BufNewFile", {
 })
 vim.api.nvim_create_autocmd("BufWritePost", {
     pattern = "*.go",
-    callback = go_newfile_attach,
+    callback = go_save_attach,
     group = goplsattach,
 })
