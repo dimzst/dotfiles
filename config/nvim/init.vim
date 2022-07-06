@@ -9,7 +9,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
 Plug 'shumphrey/fugitive-gitlab.vim'
-Plug 'numToStr/Comment.nvim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -39,6 +38,7 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'vim-test/vim-test'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'godlygeek/tabular'
+Plug 'numToStr/Comment.nvim'
 
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -167,11 +167,6 @@ nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [b :bprev<CR>
-
-augroup qfKeymap
-    autocmd!
-    autocmd FileType qf nnoremap <buffer> <silent> dd :call setqflist(filter(getqflist(), {idx -> idx != line('.') - 1}), 'r') <Bar> cc<CR>
-augroup end
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()

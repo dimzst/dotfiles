@@ -52,6 +52,15 @@ lspconfig.gopls.setup({
             },
             staticcheck = true,
             usePlaceholders = true,
+            -- codelenses = {
+            --     gc_details = false,
+            --     generate = true,
+            --     regenerate_cgo = true,
+            --     tidy = true,
+            --     upgrade_dependency = true,
+            --     vendor = true,
+            --     test = true,
+            -- }
         },
     },
     init_options = {

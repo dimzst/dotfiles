@@ -1,6 +1,6 @@
 local common = require('dimzst.config.lsp.common')
 
-local rust_opts = {
+require('rust-tools').setup({
     server = {
         on_attach = common.on_attach,
         capabilities = common.capabilities,
@@ -12,6 +12,4 @@ local rust_opts = {
             }
         }
     },
-}
-
-require('rust-tools').setup(rust_opts)
+})
