@@ -20,6 +20,8 @@ Plug 'nvim-treesitter/playground'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'stevearc/dressing.nvim'
+Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
+Plug 'j-hui/fidget.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
