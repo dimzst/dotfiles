@@ -49,7 +49,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'catppuccin/nvim'
 Plug 'beauwilliams/focus.nvim'
-Plug 'junegunn/goyo.vim'
+Plug 'Pocco81/true-zen.nvim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sainnhe/gruvbox-material'
 Plug 'rebelot/kanagawa.nvim'
@@ -160,7 +160,6 @@ noremap <Leader>cv "*p
 noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
 noremap <silent> <Leader>T :NvimTreeFindFile<CR>
-noremap <silent> <Leader>gg :Goyo<CR>
 
 nmap <silent> <leader>y :TestNearest<CR>
 nmap <silent> <leader>Y :TestFile<CR>
