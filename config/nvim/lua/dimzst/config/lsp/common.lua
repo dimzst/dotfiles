@@ -14,7 +14,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'gr', telescope.lsp_references, bufopts)
-    vim.keymap.set('n', '<leader>ff', vim.lsp.buf.formatting, bufopts)
+    vim.keymap.set('n', '<leader>ff', function() vim.lsp.buf.format { async = true } end, bufopts)
 
     -- For reference only, i am not really using workspace
     -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)

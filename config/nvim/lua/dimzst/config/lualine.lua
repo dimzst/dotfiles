@@ -77,5 +77,8 @@ require('lualine').setup({
             {'filetype', colored = false},
             {lsp_stat},
         },
-    }
+    },
+    -- winbar = {
+    --     lualine_c = {'filename'},
+    -- },
 })

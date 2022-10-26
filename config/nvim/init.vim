@@ -47,13 +47,17 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'catppuccin/nvim'
 Plug 'beauwilliams/focus.nvim'
 Plug 'Pocco81/true-zen.nvim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sainnhe/gruvbox-material'
 Plug 'rebelot/kanagawa.nvim'
 Plug 'https://gitlab.com/yorickpeterse/nvim-pqf.git'
+
+" Experimental ui, currently very buggy
+" Plug 'MunifTanjim/nui.nvim'
+" Plug 'rcarriga/nvim-notify'
+" Plug 'folke/noice.nvim'
 
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -93,14 +97,8 @@ set hidden
 set signcolumn=yes
 set shortmess+=c
 set updatetime=300
-" set cmdheight=2
+set cmdheight=0
 " set jumpoptions+=stack
-
-augroup WinActiveHighLight
-    autocmd!
-    autocmd WinEnter * set cursorline colorcolumn=80,100
-    autocmd WinLeave * set nocursorline colorcolumn=0
-augroup END
 
 " THEME
 syntax on
@@ -112,9 +110,15 @@ if exists('+termguicolors')
     set termguicolors
 endif
 
-" Transparancy
+" Transparency
 " hi Normal guibg=NONE ctermbg=NONE
 " colorscheme edge
+
+augroup WinActiveHighLight
+    autocmd!
+    autocmd WinEnter * set cursorline colorcolumn=80,100
+    autocmd WinLeave * set nocursorline colorcolumn=0
+augroup END
 
 " NvimTree
 let g:nvim_tree_side='right'
@@ -222,15 +226,12 @@ command! -nargs=? GolangciDiag call GolangciDiag()
 function! GolangciDiag()
     execute "cexpr system('golangci-lint run ./...')"
 endfunction
-
-autocmd FileType go setlocal noexpandtab
-autocmd FileType yaml setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " ---------------------------------------------------------------------
 " }}}
 
 " Override "{{{
 " ---------------------------------------------------------------------
 autocmd FileType go setlocal noexpandtab
-autocmd FileType yaml,proto setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+autocmd FileType yaml,proto,javascript,typescript setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " ---------------------------------------------------------------------
 " }}}
