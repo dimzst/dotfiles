@@ -84,21 +84,22 @@ set incsearch ignorecase smartcase showmatch nohlsearch
 set noerrorbells novisualbell
 set mouse=a
 
+set nobackup noswapfile nowritebackup
+set undofile undodir=~/.vim/undodir
+
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4
 set relativenumber nu
 set scrolloff=5
 
-set nobackup noswapfile nowritebackup
-set undofile undodir=~/.vim/undodir
-
 set splitbelow splitright
 
 set hidden
+set spell
 set signcolumn=yes
-set shortmess+=c
+set shortmess+=cI
+set jumpoptions+=stack
 set updatetime=300
 set cmdheight=0
-" set jumpoptions+=stack
 
 " THEME
 syntax on
