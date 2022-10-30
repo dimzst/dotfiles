@@ -160,7 +160,6 @@ let test#strategy = "asyncrun_background"
 " CLIPBOARD
 noremap <Leader>cc "*y
 noremap <Leader>cv "*p
-" vnoremap p "0p
 
 noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
@@ -173,6 +172,8 @@ nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [b :bprev<CR>
+
+nnoremap ; :
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()
