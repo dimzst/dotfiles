@@ -1,1 +1,1 @@
-# Dimas Personal Dotfiles
+# Dotfiles
