@@ -11,38 +11,69 @@ setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
 
+# Export
 export LANG=en_US.UTF-8
 export LC_COLLATE=C
 export TERM_THEME=dark
 export EDITOR=nvim
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# vi mode
-bindkey -v
 export KEYTIMEOUT=1
-# Fix backspace issue
-bindkey "^?" backward-delete-char
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 export DOOMDIR=~/.config/doom
-
 export GOPATH=$HOME/go
-export GOPRIVATE=gitlab.sicepat.tech
-
+export GOPRIVATE=git.garena.com/shopee,git.garena.com/shopee-server,git.garena.com
+export GOPROXY="https://proxy.golang.org,direct"
 export FD_OPTIONS="--follow --exclude .git --exclude node_modules --exclude vendor"
 export FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard | fd --type f $FD_OPTIONS"
 export FZF_CTRL_T_COMMAND="fd $FD_OPTIONS"
 export FZF_ALT_C_COMMAND="fd --type d $FD_OPTIONS"
 export FZF_COMPLETION_TRIGGER='**'
 export FZF_COMPLETION_OPTS='--border --info=inline'
+export XPLR_BOOKMARK_FILE="$HOME/xplr_bookmarks"
+# End export
+
+# Bindkey
+# Fix backspace issue
+bindkey "^?" backward-delete-char
+bindkey "^U" backward-kill-line
+bindkey "^X\x7f" backward-kill-line
+bindkey "^X^_" redo
+# end bindkey
+
+# Init plugin
+if type sheldon > /dev/null; then
+    eval "$(sheldon source)"
+fi
+
+if type atuin > /dev/null; then
+    eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
+if type zoxide > /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+# End init plugin
+
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
+# Plugin config
+
+# p10k
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# End p10k
+
+# FZF
 # Use fd (https://github.com/sharkdp/fd) instead of the default find
 # command for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
@@ -70,26 +101,35 @@ _fzf_comprun() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# End FZF
 
-# export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+# zvm fix
+zvm_after_init_commands+=("bindkey -M viins '^R' _atuin_search_widget")
+zvm_after_init_commands+=("bindkey -M vicmd '^R' _atuin_search_widget")
+# end of zvm fix
 
-export PATH=$PATH:$GOPATH/bin:$HOME/.scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin:$HOME/bin:$HOME/.emacs.d/bin
-bindkey "^U" backward-kill-line
-bindkey "^X\x7f" backward-kill-line
-bindkey "^X^_" redo
+# End plugin config
 
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
-eval "$(zoxide init zsh)"
-
+# Alias
 alias gf="git fuzzy"
 alias ls="exa"
 alias ll="exa -l"
-alias cheat="cht.sh"
+alias cht="cht.sh"
 alias t="todo.sh"
 alias nv="nvim"
+alias lg="lazygit"
+alias pip2="python2 -m pip"
+alias venv2="virtualenv -p python2"
+alias venv3="virtualenv -p python3"
+# End alias
 
-# export LANG=en_US.UTF-8
-fpath=(~/.zsh.d/ $fpath)
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+# Path
+export PATH=$PATH:$GOPATH/bin:$HOME/.scripts/shell:$HOME/Repo/git-fuzzy/bin:/usr/local/opt/libpq/bin:$HOME/bin:$HOME/.emacs.d/bin
+export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
+# End of path
+
+# source $HOME/.venvs/virtenv2/bin/activate
+# source $HOME/.venvs/venv/bin/activate
+
+source /Users/dimas.tirthadharma/.config/broot/launcher/bash/br

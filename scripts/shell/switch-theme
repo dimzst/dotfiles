@@ -4,7 +4,7 @@ ALACRITTY_CONFIG_DIR="$HOME/.config/alacritty"
 ALACRITTY_COLOR_FILE="color.yml"
 ALACRITTY_CONFIG_FILE="$ALACRITTY_CONFIG_DIR/$ALACRITTY_COLOR_FILE"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
-NVIM_CONFIG_FILE="$NVIM_CONFIG_DIR/init.vim"
+NVIM_CONFIG_FILE="init.vim"
 
 THEME="dark"
 if [ -n "$1" ]; then
@@ -23,12 +23,12 @@ switch-alactritty() {
 	if [ "$theme" = "dark" ]; then
 		alacritty_theme="gruvbox_material_medium_dark"
 	else
-		alacritty_theme="gruvbox_material_medium_light"
+		alacritty_theme="gruvbox_material_soft_light"
 	fi
 
 	REAL_CONFIG="$(readlink $ALACRITTY_CONFIG_DIR)/$ALACRITTY_COLOR_FILE"
 
-	sed -i "" -e "s#^colors: \*.*#colors: *$alacritty_theme#g" $REAL_CONFIG
+	gsed -i -e "s#^colors: \*.*#colors: *$alacritty_theme#g" $REAL_CONFIG
 
 }
 
@@ -44,20 +44,30 @@ switch-tmux() {
 switch-nvim() {
 	theme=$1
 
-	if [ ! -f "$NVIM_CONFIG_FILE" ]; then
-		echo "$NVIM_CONFIG_FILE not found" 1>&2;
+    REAL_DIR="$(readlink $NVIM_CONFIG_DIR)"
+
+	REAL_CONFIG="$REAL_DIR/$NVIM_CONFIG_FILE"
+	if [ ! -f "$REAL_CONFIG" ]; then
+		echo "nvim config file not found" 1>&2;
 		exit 1
 	fi
 
-	REAL_CONFIG="$(readlink $NVIM_CONFIG_FILE)"
-	sed -i "" -e "s#^set background=*.*#set background=$theme#g" $REAL_CONFIG
+	gsed -i -e "s#^set background=*.*#set background=$theme#g" $REAL_CONFIG
+
+	COLORSCHEME_FILE="$REAL_DIR/lua/dimzst/config/colorscheme.lua"
+    BACKGROUND="medium"
+	theme=$1
+	if [ "$theme" = "light" ]; then
+        BACKGROUND="soft"
+	fi
+	gsed -i -e "s#^vim\.g\[\"gruvbox_material_background\"\]*.*#vim\.g\[\"gruvbox_material_background\"] = '$BACKGROUND'#g" $COLORSCHEME_FILE
 
 	is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
 		| grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 
 	for pane in $(tmux lsp -a -F "#{session_name}:#{window_index}.#{pane_index}"); do
 		tmux if-shell -t "$pane" "$is_vim" "send-keys -t $pane escape ENTER"
-		tmux if-shell -t "$pane" "$is_vim" "send-keys -t $pane ':ChangeTheme $theme' ENTER"
+		tmux if-shell -t "$pane" "$is_vim" "send-keys -t $pane ';ChangeTheme $theme' ENTER"
 	done
 }
 

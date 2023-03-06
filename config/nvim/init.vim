@@ -19,9 +19,11 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : 'master'}
 Plug 'nvim-treesitter/playground'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'ray-x/lsp_signature.nvim'
-Plug 'stevearc/dressing.nvim'
 Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
 Plug 'j-hui/fidget.nvim'
+Plug 'mfussenegger/nvim-lint'
+Plug 'simrat39/rust-tools.nvim'
+Plug 'rust-lang/rust.vim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -31,28 +33,28 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
-Plug 'mfussenegger/nvim-lint'
 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'stevearc/dressing.nvim'
 Plug 'AckslD/nvim-neoclip.lua'
-Plug 'simrat39/rust-tools.nvim'
 Plug 'vim-test/vim-test'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'godlygeek/tabular'
 Plug 'numToStr/Comment.nvim'
+Plug 'chrisbra/csv.vim'
 
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'beauwilliams/focus.nvim'
 Plug 'Pocco81/true-zen.nvim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sainnhe/gruvbox-material'
-Plug 'rebelot/kanagawa.nvim'
 Plug 'https://gitlab.com/yorickpeterse/nvim-pqf.git'
+Plug 'is0n/fm-nvim'
+Plug 'beauwilliams/focus.nvim'
 
 " Experimental ui, currently very buggy
 " Plug 'MunifTanjim/nui.nvim'
@@ -62,6 +64,12 @@ Plug 'https://gitlab.com/yorickpeterse/nvim-pqf.git'
 Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+Plug 'segeljakt/vim-silicon'
+Plug 'voldikss/vim-translator'
+Plug 'mfussenegger/nvim-dap'
+Plug 'leoluz/nvim-dap-go'
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'karb94/neoscroll.nvim'
 
 call plug#end()
 
@@ -71,7 +79,7 @@ lua require('dimzst')
 
 " SETTINGS "{{{
 " ---------------------------------------------------------------------
-let workFile = '~/.config/nvim/work.vim'
+let workFile = glob('~/.config/nvim/work.vim')
 if !empty(workFile)
 	exe 'so' workFile
 endif
@@ -99,7 +107,7 @@ set signcolumn=yes
 set shortmess+=cI
 set jumpoptions+=stack
 set updatetime=300
-set cmdheight=0
+set cmdheight=1
 
 " THEME
 syntax on
@@ -117,12 +125,9 @@ endif
 
 augroup WinActiveHighLight
     autocmd!
-    autocmd WinEnter * set cursorline colorcolumn=80,100
+    autocmd WinEnter * set cursorline colorcolumn=80,120
     autocmd WinLeave * set nocursorline colorcolumn=0
 augroup END
-
-" NvimTree
-let g:nvim_tree_side='right'
 
 " FireNvim
 let g:firenvim_config = {
@@ -152,6 +157,24 @@ endif
 " vim-test
 let test#strategy = "asyncrun_background"
 
+" vim silicon
+let g:silicon = {
+      \   'theme':              'gruvbox-dark',
+      \   'font':          'Iosevka Nerd Font',
+      \   'background':              '#FBF1C7',
+      \   'shadow-color':            '#555555',
+      \   'line-pad':                        2,
+      \   'pad-horiz':                      80,
+      \   'pad-vert':                       80,
+      \   'shadow-blur-radius':              0,
+      \   'shadow-offset-x':                 0,
+      \   'shadow-offset-y':                 0,
+      \   'line-number':                v:true,
+      \   'round-corner':               v:true,
+      \   'window-controls':            v:true,
+      \   'output':                '/dev/null',
+      \ }
+
 " ---------------------------------------------------------------------
 " }}}
 
@@ -160,6 +183,11 @@ let test#strategy = "asyncrun_background"
 " CLIPBOARD
 noremap <Leader>cc "*y
 noremap <Leader>cv "*p
+
+nnoremap ; :
+nnoremap : ;
+
+nnoremap <silent> <Leader>w :w<CR>
 
 noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
@@ -172,8 +200,6 @@ nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
 nnoremap <silent> ]b :bnext<CR>
 nnoremap <silent> [b :bprev<CR>
-
-nnoremap ; :
 
 " PANE NAVIGATION
 function! s:PaneNavigationRemap()

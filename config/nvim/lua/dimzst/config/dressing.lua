@@ -6,8 +6,14 @@ require('dressing').setup({
     -- Default prompt string
     default_prompt = "➤ ",
 
+    -- Can be 'left', 'right', or 'center'
+    prompt_align = "left",
+
     -- When true, <Esc> will close the modal
-    insert_only = false,
+    insert_only = true,
+
+    -- When true, input will start in insert mode.
+    start_in_insert = true,
 
     -- These are passed to nvim_open_win
     anchor = "SW",
@@ -23,10 +29,27 @@ require('dressing').setup({
     max_width = { 140, 0.9 },
     min_width = { 20, 0.2 },
 
-    -- Window transparency (0-100)
-    winblend = 10,
-    -- Change default highlight groups (see :help winhl)
-    winhighlight = "",
+    buf_options = {},
+    win_options = {
+      -- Window transparency (0-100)
+      winblend = 10,
+      -- Disable line wrapping
+      wrap = false,
+    },
+
+    -- Set to `false` to disable
+    mappings = {
+      n = {
+        ["<Esc>"] = "Close",
+        ["<CR>"] = "Confirm",
+      },
+      i = {
+        ["<C-c>"] = "Close",
+        ["<CR>"] = "Confirm",
+        ["<Up>"] = "HistoryPrev",
+        ["<Down>"] = "HistoryNext",
+      },
+    },
 
     override = function(conf)
       -- This is the config that will be passed to nvim_open_win.
@@ -43,6 +66,9 @@ require('dressing').setup({
 
     -- Priority list of preferred vim.select implementations
     backend = { "telescope", "fzf_lua", "fzf", "builtin", "nui" },
+
+    -- Trim trailing `:` from prompt
+    trim_prompt = true,
 
     -- Options for telescope selector
     -- These are passed into the telescope picker directly. Can be used like:
@@ -73,8 +99,17 @@ require('dressing').setup({
       border = {
         style = "rounded",
       },
+      buf_options = {
+        swapfile = false,
+        filetype = "DressingSelect",
+      },
+      win_options = {
+        winblend = 10,
+      },
       max_width = 80,
       max_height = 40,
+      min_width = 40,
+      min_height = 10,
     },
 
     -- Options for built-in selector
@@ -85,10 +120,11 @@ require('dressing').setup({
       -- 'editor' and 'win' will default to being centered
       relative = "editor",
 
-      -- Window transparency (0-100)
-      winblend = 10,
-      -- Change default highlight groups (see :help winhl)
-      winhighlight = "",
+      buf_options = {},
+      win_options = {
+        -- Window transparency (0-100)
+        winblend = 10,
+      },
 
       -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
       -- the min_ and max_ options can be a list of mixed types.
@@ -99,6 +135,13 @@ require('dressing').setup({
       height = nil,
       max_height = 0.9,
       min_height = { 10, 0.2 },
+
+      -- Set to `false` to disable
+      mappings = {
+        ["<Esc>"] = "Close",
+        ["<C-c>"] = "Close",
+        ["<CR>"] = "Confirm",
+      },
 
       override = function(conf)
         -- This is the config that will be passed to nvim_open_win.

@@ -15,7 +15,7 @@ window:
     x: 5
     y: 5
   decorations: none
-  opacity: 0.95
+  opacity: 0.96
 
 scrolling:
   history: 100000
@@ -50,7 +50,7 @@ font:
   #  x: 20
   #  y: 0
 
-  use_thin_strokes: true
+  # use_thin_strokes: true
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"

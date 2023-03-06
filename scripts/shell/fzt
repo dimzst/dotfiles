@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-FZF_OPT="-p -w 72% -h 90% -m --height 30% --preview-window left:92% --layout reverse"
+FZF_OPT="-p -w 80% -h 90% -m --height 30% --preview-window left:92% --layout reverse"
 FZF_PREVIEW="--preview='tmux capture-pane -ep -t {}'"
 TMUX_LS_FORMAT="-F #{session_name}"
 
@@ -37,6 +37,9 @@ case "$1" in
         kill_session
         ;;
     "attach")
+        attach_session
+        ;;
+    "")
         attach_session
         ;;
     *)
