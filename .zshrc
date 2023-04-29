@@ -132,4 +132,4 @@ export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
 # source $HOME/.venvs/virtenv2/bin/activate
 # source $HOME/.venvs/venv/bin/activate
 
-source /Users/dimas.tirthadharma/.config/broot/launcher/bash/br
+# source $HOME/.config/broot/launcher/bash/br
