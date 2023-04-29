@@ -8,6 +8,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-abolish'
 Plug 'shumphrey/fugitive-gitlab.vim'
 
 Plug 'nvim-lua/popup.nvim'
@@ -24,6 +25,7 @@ Plug 'j-hui/fidget.nvim'
 Plug 'mfussenegger/nvim-lint'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'rust-lang/rust.vim'
+Plug 'lvimuser/lsp-inlayhints.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -128,31 +130,6 @@ augroup WinActiveHighLight
     autocmd WinEnter * set cursorline colorcolumn=80,120
     autocmd WinLeave * set nocursorline colorcolumn=0
 augroup END
-
-" FireNvim
-let g:firenvim_config = {
-            \ 'globalSettings': {
-                \ 'alt': 'all',
-                \ '<C-i>': 'noop',
-                \  },
-                \ 'localSettings': {
-                    \ '.*': {
-                        \ 'cmdline': 'neovim',
-                        \ 'content': 'text',
-                        \ 'priority': 0,
-                        \ 'selector': 'textarea',
-                        \ 'takeover': 'never',
-                        \ },
-                        \ }
-                        \ }
-
-if exists('g:started_by_firenvim') && g:started_by_firenvim
-    augroup FireNvimFT
-        autocmd!
-        autocmd BufEnter *.txt set filetype=markdown
-        autocmd BufEnter go.dev_play_*.txt set filetype=go | call GuiFont(12)
-    augroup END
-endif
 
 " vim-test
 let test#strategy = "asyncrun_background"

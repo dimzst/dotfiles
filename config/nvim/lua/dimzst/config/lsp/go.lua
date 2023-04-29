@@ -52,6 +52,15 @@ lspconfig.gopls.setup({
             },
             staticcheck = true,
             usePlaceholders = true,
+            hints = {
+                assignVariableTypes = false,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = false,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+            },
             -- codelenses = {
             --     gc_details = false,
             --     generate = true,
