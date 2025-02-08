@@ -120,6 +120,7 @@ alias t="todo.sh"
 alias nv="nvim"
 alias lg="lazygit"
 alias pip2="python2 -m pip"
+alias pip3="python3 -m pip"
 alias venv2="virtualenv -p python2"
 alias venv3="virtualenv -p python3"
 # End alias
@@ -132,4 +133,5 @@ export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
 # source $HOME/.venvs/virtenv2/bin/activate
 # source $HOME/.venvs/venv/bin/activate
 
-# source $HOME/.config/broot/launcher/bash/br
+# completion
+autoload -U compinit; compinit

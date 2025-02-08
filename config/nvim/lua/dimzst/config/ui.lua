@@ -1,8 +1,39 @@
-require("neoscroll").setup()
+-- require("neoscroll").setup()
 
 vim.api.nvim_create_autocmd({"TermOpen"}, {
     pattern = "*",
     command = "DisableWhitespace",
+})
+
+-- require("hlchunk").setup({
+--     indent = {
+--         enable = false,
+--     },
+--     line_num = {
+--         enable = false,
+--     },
+--     blank = {
+--         enable = false,
+--     },
+-- })
+
+local augroup =
+    vim.api.nvim_create_augroup('WinActiveHighLight', { clear = true })
+
+vim.api.nvim_create_autocmd('WinEnter', {
+    group = augroup,
+    callback = function(_)
+        vim.wo.cursorline = true
+        vim.wo.colorcolumn = "80,120"
+    end,
+})
+
+vim.api.nvim_create_autocmd('WinLeave', {
+    group = augroup,
+    callback = function(_)
+        vim.wo.cursorline = false
+        vim.wo.colorcolumn = "0"
+    end,
 })
 
 -- require("notify").setup({

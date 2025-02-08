@@ -1,6 +1,7 @@
 local luasnip = require('luasnip')
 local cmp = require('cmp')
 local lsp_types = require('cmp.types').lsp
+local compare = require('cmp.config.compare')
 
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -61,39 +62,45 @@ end
 cmp.setup({
     preselect = cmp.PreselectMode.None,
     sorting = {
-        -- comparators = {
-        --     exact_kind,
-        --     lspkind_comparator({
-        --         kind_priority = {
-        --             Field = 11,
-        --             Property = 11,
-        --             Constant = 10,
-        --             Enum = 10,
-        --             EnumMember = 10,
-        --             Event = 10,
-        --             Function = 10,
-        --             Method = 10,
-        --             Operator = 10,
-        --             Reference = 10,
-        --             Struct = 10,
-        --             Variable = 9,
-        --             File = 8,
-        --             Folder = 8,
-        --             Class = 5,
-        --             Color = 5,
-        --             Module = 5,
-        --             Keyword = 2,
-        --             Constructor = 1,
-        --             Interface = 1,
-        --             Text = 1,
-        --             TypeParameter = 1,
-        --             Unit = 1,
-        --             Value = 1,
-        --             Snippet = 0,
-        --         },
-        --     }),
-        --     label_comparator,
-        -- },
+        priority_weight = 2,
+        comparators = {
+            compare.offset,
+            exact_kind,
+            compare.score,
+            compare.recently_used,
+            lspkind_comparator({
+                kind_priority = {
+                    Field = 11,
+                    Property = 11,
+                    Constant = 10,
+                    Enum = 10,
+                    EnumMember = 10,
+                    Event = 10,
+                    Function = 10,
+                    Method = 10,
+                    Operator = 10,
+                    Reference = 10,
+                    Struct = 10,
+                    Variable = 9,
+                    File = 8,
+                    Folder = 8,
+                    Class = 5,
+                    Color = 5,
+                    Module = 5,
+                    Keyword = 2,
+                    Constructor = 1,
+                    Interface = 1,
+                    Text = 1,
+                    TypeParameter = 1,
+                    Unit = 1,
+                    Value = 1,
+                    Snippet = 0,
+                },
+            }),
+            label_comparator,
+            compare.locality,
+            compare.length,
+        },
     },
     snippet = {
         expand = function(args)
@@ -125,6 +132,11 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }),
+        ['<c-l>'] = cmp.mapping(function()
+            if luasnip.choice_active() then
+                luasnip.change_choice(1)
+            end
+        end, { "i", "s" }),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-u>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete({}),
@@ -144,3 +156,17 @@ cmp.setup({
         ghost_text = true,
     }
 })
+
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        { name = 'cmdline' }
+    }),
+    matching = { disallow_symbol_nonprefix_matching = false }
+})
+
+
+-- vim.g["tabby_agent_start_command"] = {"npx", "tabby-agent", "--stdio"}
+-- vim.g["tabby_inline_completion_trigger"] = "auto"

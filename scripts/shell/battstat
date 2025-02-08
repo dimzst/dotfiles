@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-declare -A barmap=(["0"]="" ["1"]="" ["2"]="" ["3"]="" ["4"]="" ["5"]="" ["6"]="" ["7"]="" ["8"]="" ["9"]="" ["10"]="")
+declare -A barmap=(["0"]="󰂎" ["1"]="󰁺" ["2"]="󰁻" ["3"]="󰁼" ["4"]="󰁽" ["5"]="󰁾" ["6"]="󰁿" ["7"]="󰂀" ["8"]="󰂁" ["9"]="󰂂" ["10"]="󰁹")
 
-declare -A statusmap=(["AC attached"]="ﳥ" ["charged"]="ﳥ" ["charging"]="ﮣ" ["discharging"]="ﮤ")
+declare -A statusmap=(["AC attached"]="󱐥" ["charged"]="󱐥" ["charging"]="󱐥" ["discharging"]="󱐤 ")
 
 declare -A barcol
 declare -A statuscol
@@ -49,7 +49,7 @@ status_line() {
 	pnum="${percent%?}"
 	bat=$(bar $pnum)
 	stat="$(charge)"
-	echo -e "$stat  $bat ${pnum}"
+	echo -e "$stat $bat ${pnum}󱉸"
 }
 
 status_line

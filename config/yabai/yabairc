@@ -23,6 +23,7 @@ yabai -m config window_gap 6
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Raycast$" manage=off
 yabai -m rule --add app="^Code$" opacity=0.95
-yabai -m rule --add app="^Arc$" title="^Space.*" manage=off
+yabai -m rule --add app="^Obsidian$" opacity=0.96
+yabai -m rule --add app='^Arc$' title='^Space.*$' manage=off
 
 echo "yabai configuration loaded.."

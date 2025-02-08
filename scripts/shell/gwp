@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+FZF_OPT="-p --layout reverse"
+
+BRANCH="$(git worktree list | tail -n +2 | awk '{print $3}' | tr -d \[\] | fzf-tmux $FZF_OPT --prompt=branch:)"
+
+if [ -z "$BRANCH" ]; then
+	echo "branch required" 1>&2;
+	exit 1;
+fi
+
+BRANCH_PATH="$(git worktree list | tail -n +2 | awk -v branch="[${BRANCH}]" '{if ($3 == branch) print $1}')"
+if [ "$BRANCH_PATH" == "" ]; then
+	echo "could not identify worktree path" 1>&2;
+	exit 1;
+fi
+
+echo $BRANCH_PATH

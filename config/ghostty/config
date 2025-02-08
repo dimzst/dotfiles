@@ -1,0 +1,25 @@
+theme = GruvboxLight
+background = f9f5d7
+foreground = 654735
+
+window-decoration = false
+copy-on-select = true
+macos-option-as-alt = true
+#macos-titlebar-style = hidden
+
+font-family = "CommitMono Nerd Font"
+font-style = "Regular"
+
+font-family-bold = "CommitMono Nerd Font"
+font-style-bold = "Bold"
+
+font-family-italic = "CommitMono Nerd Font"
+font-style-italic = "Italic"
+
+font-family-bold-italic = "CommitMono Nerd Font"
+font-style-bold-italic = "Bold Italic"
+
+font-size = "15.5"
+
+background-opacity = 0.85
+background-blur-radius = "20"

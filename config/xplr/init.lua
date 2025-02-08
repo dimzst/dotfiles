@@ -26,9 +26,14 @@ require("xpm").setup({
     'dtomvan/xpm.xplr',
     { name = 'sayanarijit/fzf.xplr' },
     { name = 'sayanarijit/dual-pane.xplr' },
+    { name = 'igorepst/context-switch.xplr' },
   },
   auto_install = true,
   auto_cleanup = true,
+})
+
+require('context-switch').setup({
+    key = 'ctrl-p'
 })
 
 -- With `export XPLR_BOOKMARK_FILE="$HOME/bookmarks"`

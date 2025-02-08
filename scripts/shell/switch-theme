@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
 ALACRITTY_CONFIG_DIR="$HOME/.config/alacritty"
-ALACRITTY_COLOR_FILE="color.yml"
-ALACRITTY_CONFIG_FILE="$ALACRITTY_CONFIG_DIR/$ALACRITTY_COLOR_FILE"
+ALACRITTY_CONFIG_FILENAME="alacritty.toml"
+ALACRITTY_CONFIG_FILE="$ALACRITTY_CONFIG_DIR/$ALACRITTY_CONFIG_FILENAME"
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
 NVIM_CONFIG_FILE="init.vim"
+USQL_CONFIG_FILE="$HOME/.usqlrc"
+CHT_CONFIG_DIR="$HOME/.cht.sh"
+CHT_CONFIG_FILENAME="cht.sh.conf"
+CHT_CONFIG_FILE="$CHT_CONFIG_DIR/$CHT_CONFIG_FILENAME"
 
 THEME="dark"
 if [ -n "$1" ]; then
@@ -23,13 +27,12 @@ switch-alactritty() {
 	if [ "$theme" = "dark" ]; then
 		alacritty_theme="gruvbox_material_medium_dark"
 	else
-		alacritty_theme="gruvbox_material_soft_light"
+		alacritty_theme="gruvbox_material_hard_light"
 	fi
 
-	REAL_CONFIG="$(readlink $ALACRITTY_CONFIG_DIR)/$ALACRITTY_COLOR_FILE"
+	REAL_CONFIG="$(readlink $ALACRITTY_CONFIG_DIR)/$ALACRITTY_CONFIG_FILENAME"
 
-	gsed -i -e "s#^colors: \*.*#colors: *$alacritty_theme#g" $REAL_CONFIG
-
+	gsed -i -e "s#/alacritty/themes/*.*\.toml#/alacritty/themes/$alacritty_theme\.toml#g" $REAL_CONFIG
 }
 
 switch-tmux() {
@@ -58,7 +61,7 @@ switch-nvim() {
     BACKGROUND="medium"
 	theme=$1
 	if [ "$theme" = "light" ]; then
-        BACKGROUND="soft"
+        BACKGROUND="hard"
 	fi
 	gsed -i -e "s#^vim\.g\[\"gruvbox_material_background\"\]*.*#vim\.g\[\"gruvbox_material_background\"] = '$BACKGROUND'#g" $COLORSCHEME_FILE
 
@@ -71,6 +74,44 @@ switch-nvim() {
 	done
 }
 
+switch-usql() {
+	if [ ! -f "$USQL_CONFIG_FILE" ]; then
+		echo "$USQL_CONFIG_FILE not found" 1>&2;
+		exit 1
+	fi
+
+	theme=$1
+	if [ "$theme" = "dark" ]; then
+		usql_theme="gruvbox"
+	else
+		usql_theme="gruvbox-light"
+	fi
+
+	REAL_CONFIG="$(readlink $USQL_CONFIG_FILE)"
+
+	gsed -i -e "s#^\\\set SYNTAX_HL_STYLE *.*#\\\set SYNTAX_HL_STYLE $usql_theme#g" $REAL_CONFIG
+}
+
+switch-cht() {
+	if [ ! -f "$CHT_CONFIG_FILE" ]; then
+		echo "$CHT_CONFIG_FILE not found" 1>&2;
+		exit 1
+	fi
+
+	theme=$1
+	if [ "$theme" = "dark" ]; then
+		theme="paraiso-dark"
+	else
+		theme="paraiso-light"
+	fi
+
+	REAL_CONFIG="$(readlink $CHT_CONFIG_DIR)/$CHT_CONFIG_FILENAME"
+
+	gsed -i -e "s#^CHTSH_QUERY_OPTIONS=*.*#CHTSH_QUERY_OPTIONS=\"style=$theme\"#g" $REAL_CONFIG
+}
+
 switch-alactritty $THEME
 switch-tmux $THEME
 switch-nvim $THEME
+switch-usql $THEME
+switch-cht $THEME

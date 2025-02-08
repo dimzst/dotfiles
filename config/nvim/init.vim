@@ -18,14 +18,13 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch' : 'master', 'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-textobjects', {'branch' : 'master'}
 Plug 'nvim-treesitter/playground'
-Plug 'nvim-treesitter/nvim-treesitter-context'
+" Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'https://git.sr.ht/~whynothugo/lsp_lines.nvim'
-Plug 'j-hui/fidget.nvim'
+Plug 'j-hui/fidget.nvim', {'branch' : 'legacy' }
 Plug 'mfussenegger/nvim-lint'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'rust-lang/rust.vim'
-Plug 'lvimuser/lsp-inlayhints.nvim'
 
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
@@ -35,6 +34,8 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
+" Plug 'nzlov/cmp-tabby'
+" Plug 'TabbyML/vim-tabby'
 
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
@@ -57,21 +58,24 @@ Plug 'sainnhe/gruvbox-material'
 Plug 'https://gitlab.com/yorickpeterse/nvim-pqf.git'
 Plug 'is0n/fm-nvim'
 Plug 'beauwilliams/focus.nvim'
+Plug 'mrjones2014/smart-splits.nvim'
+Plug 'stevearc/oil.nvim'
 
 " Experimental ui, currently very buggy
 " Plug 'MunifTanjim/nui.nvim'
 " Plug 'rcarriga/nvim-notify'
 " Plug 'folke/noice.nvim'
 
-Plug 'NTBBloodbath/rest.nvim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 Plug 'segeljakt/vim-silicon'
 Plug 'voldikss/vim-translator'
 Plug 'mfussenegger/nvim-dap'
 Plug 'leoluz/nvim-dap-go'
+Plug 'nvim-neotest/nvim-nio'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'karb94/neoscroll.nvim'
+Plug 'shellRaining/hlchunk.nvim'
 
 call plug#end()
 
@@ -86,7 +90,7 @@ if !empty(workFile)
 	exe 'so' workFile
 endif
 
-set background=dark
+set background=light
 
 set list listchars=eol:¬,tab:>-,trail:~,extends:>,precedes:<,lead:.
 
@@ -98,14 +102,13 @@ set nobackup noswapfile nowritebackup
 set undofile undodir=~/.vim/undodir
 
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4
-set relativenumber nu
-set scrolloff=5
+set relativenumber nu signcolumn=yes
+set scrolloff=5 nowrap
 
 set splitbelow splitright
 
 set hidden
 set spell
-set signcolumn=yes
 set shortmess+=cI
 set jumpoptions+=stack
 set updatetime=300
@@ -125,24 +128,24 @@ endif
 " hi Normal guibg=NONE ctermbg=NONE
 " colorscheme edge
 
-augroup WinActiveHighLight
-    autocmd!
-    autocmd WinEnter * set cursorline colorcolumn=80,120
-    autocmd WinLeave * set nocursorline colorcolumn=0
-augroup END
+" augroup WinActiveHighLight
+"     autocmd!
+"     autocmd WinEnter * set cursorline colorcolumn=80,120
+"     autocmd WinLeave * set nocursorline colorcolumn=0
+" augroup END
 
 " vim-test
 let test#strategy = "asyncrun_background"
 
 " vim silicon
 let g:silicon = {
-      \   'theme':              'gruvbox-dark',
-      \   'font':          'Iosevka Nerd Font',
-      \   'background':              '#FBF1C7',
+      \   'theme':              'gruvbox-light',
+      \   'font':          'CommitMono Nerd Font;PingFang TC',
+      \   'background':              '#FFFFFF',
       \   'shadow-color':            '#555555',
       \   'line-pad':                        2,
-      \   'pad-horiz':                      80,
-      \   'pad-vert':                       80,
+      \   'pad-horiz':                      0,
+      \   'pad-vert':                       0,
       \   'shadow-blur-radius':              0,
       \   'shadow-offset-x':                 0,
       \   'shadow-offset-y':                 0,
@@ -170,8 +173,8 @@ noremap <silent> <Leader>gs :Git<CR>
 noremap <silent> <Leader>t :NvimTreeToggle<CR>
 noremap <silent> <Leader>T :NvimTreeFindFile<CR>
 
-nmap <silent> <leader>y :TestNearest<CR>
-nmap <silent> <leader>Y :TestFile<CR>
+noremap <silent> <Leader>y :TestNearest<CR>
+noremap <silent> <Leader>Y :TestFile<CR>
 
 nnoremap <silent> ]q :cnext<CR>
 nnoremap <silent> [q :cprev<CR>
@@ -224,7 +227,7 @@ endfunction
 command! -nargs=? GuiFont call GuiFont(<q-args>)
 function! GuiFont(num)
     let num = a:num == '' ? 10 : a:num
-    execute printf('set guifont=IosevkaNerdFont:h%s', num)
+    execute printf('set guifont=IosevkaTermNerdFont:h%s', num)
 endfunction
 
 command! -nargs=? GolangciDiag call GolangciDiag()
@@ -236,7 +239,7 @@ endfunction
 
 " Override "{{{
 " ---------------------------------------------------------------------
-autocmd FileType go setlocal noexpandtab
+autocmd FileType go setlocal noexpandtab wrap
 autocmd FileType yaml,proto,javascript,typescript setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 " ---------------------------------------------------------------------
 " }}}

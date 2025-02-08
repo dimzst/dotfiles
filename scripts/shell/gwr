@@ -4,8 +4,8 @@ set -eo pipefail
 
 FZF_OPT="-p --layout reverse"
 
-TO_BE_REMOVE="$(git worktree list --porcelain | grep ^worktree | tail -n +2 | awk '{print $2}' | xargs basename | fzf-tmux $FZF_OPT --prompt=remove:)"
-GIT_WORKTREE_OPTS="$2"
+TO_BE_REMOVE="$(git worktree list --porcelain | grep ^worktree | tail -n +2 | awk '{print $2}' | xargs -n 1 basename | fzf-tmux $FZF_OPT --prompt=remove:)"
+GIT_WORKTREE_OPTS="$@"
 
 if [ -z "$TO_BE_REMOVE" ]; then
 	echo "worktree to be remove is required" 1>&2;

@@ -14,7 +14,13 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'gr', telescope.lsp_references, bufopts)
+    vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, bufopts)
     vim.keymap.set('n', '<leader>ff', function() vim.lsp.buf.format { async = true } end, bufopts)
+    vim.keymap.set('n', '<leader>ih', function()
+        if client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end
+    end, bufopts)
 
     -- For reference only, i am not really using workspace
     -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
@@ -22,6 +28,7 @@ local on_attach = function(client, bufnr)
     -- vim.keymap.set('n', '<space>wl', function()
     --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     -- end, bufopts)
+
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()

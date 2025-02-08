@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+git log --color --graph --pretty=format:'%Cred%h%Creset %Cgreen(%cd)%Creset -%C(yellow)%d%Creset %s %C(bold blue)[%ae]%Creset' --date=short --abbrev-commit "$@"

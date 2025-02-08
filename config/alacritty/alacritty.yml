@@ -12,10 +12,10 @@ window:
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 5
-    y: 5
+    x: 2
+    y: 2
   decorations: none
-  opacity: 0.96
+  opacity: 0.9
 
 scrolling:
   history: 100000
@@ -23,18 +23,44 @@ scrolling:
 # Font configuration
 font:
   normal:
-    family: Iosevka Nerd Font
-    style: Light
+    family: CommitMono Nerd Font
+    style: Regular
   italic:
-    family: Iosevka Nerd Font
-    style: Light Italic
+    family: CommitMono Nerd Font
+    style: Italic
   bold:
-    family: Iosevka Nerd Font
-    style: Medium
+    family: CommitMono Nerd Font
+    style: Bold
   bold_italic:
-    family: Iosevka Nerd Font
-    style: Medium Italic
+    family: CommitMono Nerd Font
+    style: Bold Italic
   size: 16.0
+  # normal:
+  #   family: IosevkaTerm Nerd Font Mono
+  #   style: Light Extended
+  # italic:
+  #   family: IosevkaTerm Nerd Font Mono
+  #   style: Light Italic Extended
+  # bold:
+  #   family: IosevkaTerm Nerd Font Mono
+  #   style: Medium Extended
+  # bold_italic:
+  #   family: IosevkaTerm Nerd Font Mono
+  #   style: Medium Italic Extended
+  # size: 16.0
+  # normal:
+  #   family: IosevkaTerm Nerd Font
+  #   style: Light
+  # italic:
+  #   family: IosevkaTerm Nerd Font
+  #   style: Light Italic
+  # bold:
+  #   family: IosevkaTerm Nerd Font
+  #   style: Medium
+  # bold_italic:
+  #   family: IosevkaTerm Nerd Font
+  #   style: Medium Italic
+  # size: 17.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -360,7 +386,7 @@ cursor:
 #
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
-#key_bindings:
+key_bindings:
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
   #- { key: L,         mods: Control,                    action: ClearLogNotice }
@@ -463,10 +489,10 @@ cursor:
   #- { key: C,              mods: Command, mode: Vi|~Search,  action: ClearSelection   }
   #- { key: H,              mods: Command,                    action: Hide             }
   #- { key: M,              mods: Command,                    action: Minimize         }
-  #- { key: Q,              mods: Command,                    action: Quit             }
-  #- { key: W,              mods: Command,                    action: Quit             }
+  - { key: Q,              mods: Command,                    action: None             }
+  - { key: W,              mods: Command,                    action: None             }
   #- { key: N,              mods: Command,                    action: SpawnNewInstance }
-  #- { key: F,              mods: Command|Control,            action: ToggleFullscreen }
+  - { key: F,              mods: Command|Control,            action: ToggleSimpleFullscreen }
   #- { key: F,              mods: Command, mode: ~Search,     action: SearchForward    }
   #- { key: B,              mods: Command, mode: ~Search,     action: SearchBackward   }
 
